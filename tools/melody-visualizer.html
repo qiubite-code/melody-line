@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>音乐教学实时音频旋律线条可视化系统｜雅致界面美化版｜作者：丘比特</title>
-  <meta name="author" content="丘比特" />
+  <title>音乐教学实时音频旋律线条可视化系统｜雅致界面美化版</title>
+  
   <style>
     :root {
       --bg: #0f172a;
@@ -2017,7 +2017,28 @@
     .action-panel{padding:14px!important}.section-title-row{justify-content:flex-start!important;align-items:flex-start!important;margin-bottom:10px!important}.section-title-row .section-subtitle{display:none!important}.action-cluster{display:grid!important;grid-template-columns:minmax(420px,1.1fr) minmax(360px,.9fr)!important;gap:12px!important}.action-group{padding:12px!important}.action-group.secondary-group{grid-column:auto!important}.button-grid.four-col,.button-grid.three-col{grid-template-columns:repeat(2,minmax(0,1fr))!important}.button-grid button,.button-grid .file-label{min-height:46px!important;font-size:14px!important}.media-status-grid{grid-template-columns:1fr!important}.status{min-height:48px}.audio-box{padding:12px!important}.output-below-stage{margin-top:12px!important}.output-action-grid{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important}.notation-panel{margin-top:14px!important}.jianpu-dur{font-size:10px!important;white-space:nowrap}.notation-meta span{white-space:nowrap}.stage{border-color:rgba(125,211,252,.22)!important}
     @media(max-width:980px){.action-cluster{grid-template-columns:1fr!important}.output-action-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
 
-  </style>
+  
+/* ===== V4.0 多段音频叠加与播放器控制 ===== */
+.comparison-panel{display:none!important}
+.multi-audio-panel{margin-top:14px;padding:14px;border-radius:20px;background:linear-gradient(180deg,rgba(9,23,42,.92),rgba(8,18,35,.9));}
+.multi-audio-head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:10px}.multi-audio-head h2{margin:0;font-size:22px}.multi-audio-actions{display:flex;gap:8px;flex-wrap:wrap}.multi-audio-actions button{min-height:38px;border-radius:14px;color:#fff;border:1px solid rgba(162,191,217,.16);background:rgba(30,52,78,.85);font-weight:800;padding:8px 12px}.segment-list{display:grid;gap:8px}.segment-row{display:grid;grid-template-columns:auto minmax(120px,1fr) auto auto auto;gap:8px;align-items:center;padding:9px 10px;border:1px solid rgba(162,191,217,.14);border-radius:14px;background:rgba(255,255,255,.035)}.segment-color{width:26px;height:4px;border-radius:99px}.segment-name{font-weight:800;color:#edf7ff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.segment-type{font-size:12px;color:#9fb4cb}.segment-row button{border:1px solid rgba(162,191,217,.14);border-radius:12px;background:rgba(20,42,68,.88);color:#eaf6ff;font-weight:800;padding:7px 10px}.empty-segment-tip{color:#9fb4cb;font-size:13px;line-height:1.6}.comparison-mini-legend{left:150px!important}.comparison-mini-legend .multi-line{color:#a7f3d0}
+@media(max-width:720px){.segment-row{grid-template-columns:auto 1fr;}.segment-row button,.segment-type{grid-column:auto}.multi-audio-head{align-items:flex-start;flex-direction:column}}
+
+
+/* V4.1：嵌入一站式平台时隐藏作者信息 */
+.author-badge{display:none!important}.footer-note{display:none!important}.hero-topline,.hero-top{justify-content:flex-start!important}
+
+
+
+/* V4.2 嵌入平台精简：隐藏作者与说明区，只保留功能主体 */
+.author-badge,.footer-note,.feature-chips,.help-card,.hero-card .subtitle,.hero-card .eyebrow{display:none!important;}
+.shell-header{display:block!important;margin-bottom:10px!important;}
+.hero-card{padding:16px 18px!important;}
+.hero-card h1{font-size:28px!important;line-height:1.15!important;}
+.visual-head .section-subtitle,.status .pill + *{display:none!important;}
+
+</style>
+<!-- V4.4: restored from V4.2 visualizer with detailed operation manual retained. -->
 </head>
 <body>
   <main class="app redesigned-app">
@@ -2028,7 +2049,7 @@
             <p class="eyebrow">音乐课堂可视化学习工具</p>
             <h1>实时音频旋律线条可视化系统</h1>
           </div>
-          <span class="author-badge">作者：丘比特</span>
+          
         </div>
         <p class="subtitle">操作流程：开始录音 / 上传音频 → 观察旋律线 → 回放定位 → 生成谱例。</p>
         <div class="feature-chips" aria-label="系统特点">
@@ -2074,7 +2095,7 @@
             <button id="pauseRecording" class="pause-btn" disabled>Ⅱ 暂停录音</button>
             <button id="stopMic" class="stop" disabled>■ 结束录音</button>
             <label class="file-label upload-btn" for="audioFile">↥ 上传 mp3 / wav</label>
-            <input id="audioFile" type="file" accept="audio/*,.mp3,.wav,.m4a,.ogg" />
+            <input id="audioFile" type="file" multiple accept="audio/*,.mp3,.wav,.m4a,.ogg" />
           </div>
         </div>
       </div>
@@ -2225,13 +2246,13 @@
       </div>
     </section>
 
-    <section class="panel comparison-panel" aria-label="旋律线对比区">
-      <div class="comparison-head">
-        <div><p class="eyebrow">对比区</p><h2>导入音频 / 录音旋律线对比</h2></div>
-        <div class="comparison-legend"><span class="legend-file">导入音频</span><span class="legend-record">麦克风录音</span></div>
+
+    <section class="panel multi-audio-panel" aria-label="多段音频旋律线管理">
+      <div class="multi-audio-head">
+        <div><p class="eyebrow">多段对比</p><h2>导入音频 / 录音旋律线</h2></div>
+        <div class="multi-audio-actions"><button id="playAllSegments" class="ghost">▶ 同时播放</button><button id="stopAllSegments" class="ghost">■ 停止全部</button></div>
       </div>
-      <div class="comparison-canvas-wrap"><canvas id="comparisonCanvas"></canvas></div>
-      <p class="comparison-tip">先上传音频播放生成蓝色旋律线，再开始录音生成金色旋律线。两条线会保留在同一对比区，便于听辨与课堂讲解。</p>
+      <div id="segmentList" class="segment-list"><span class="empty-segment-tip">可导入或录制多段音频，生成的旋律线会叠加显示在同一个观察区。</span></div>
     </section>
 
     <section id="notationPanel" class="notation-panel panel" aria-label="旋律转谱结果">
@@ -2259,7 +2280,7 @@
       <div class="manual-header">
         <div>
           <h2 id="manualTitle">实时音频旋律线条可视化系统｜更新版操作手册</h2>
-          <p>教师版 + 学生版｜覆盖录音、上传音频、单播放器、播放光标、简谱/五线谱、调号拍号与课堂排查｜作者：丘比特</p>
+          <p>教师版 + 学生版｜覆盖录音、上传音频、单播放器、播放光标、简谱/五线谱、调号拍号与课堂排查</p>
         </div>
         <div class="manual-actions">
           <a href="#manual-toc">目录</a>
@@ -2269,7 +2290,7 @@
       <div class="manual-body">
 <div class="manual-cover">
 <h3>实时音频旋律线条可视化系统</h3>
-<p class="manual-note"><strong>操作手册｜教师版 + 学生版<br>作者：丘比特</strong></p>
+<p class="manual-note"><strong>操作手册｜教师版 + 学生版<br>作者：郑壹健</strong></p>
 <p>适用于中小学 / 初中音乐课堂、演唱示范、乐句分析、音准反馈、简谱与五线谱转写、课堂展示评价。系统采用纯前端网页运行，支持麦克风录音、上传 mp3/WAV、本地回放、播放光标同步、简谱/五线谱生成、调号/拍号/速度设置。</p>
 <table>
 <thead><tr><th>项目</th><th>说明</th></tr></thead>
@@ -2455,6 +2476,9 @@
     const hideNoteNamesToggle = $('hideNoteNamesToggle');
     const comparisonCanvas = $('comparisonCanvas');
     const comparisonCtx = comparisonCanvas ? comparisonCanvas.getContext('2d') : null;
+    const segmentList = $('segmentList');
+    const playAllSegmentsBtn = $('playAllSegments');
+    const stopAllSegmentsBtn = $('stopAllSegments');
 
     const startMicBtn = $('startMic');
     const stopMicBtn = $('stopMic');
@@ -2555,6 +2579,10 @@
     let points = [];
     let importedTracePoints = [];
     let recordedTracePoints = [];
+    let audioSegments = [];
+    let currentSegmentId = null;
+    let segmentPlayers = [];
+    const SEGMENT_COLORS = ['rgba(125,211,252,.92)','rgba(250,204,21,.92)','rgba(167,243,208,.92)','rgba(216,180,254,.92)','rgba(251,146,60,.92)','rgba(248,113,113,.92)'];
     let phraseMarkers = [];
     let restMarkers = [];
     let phraseIndex = 1;
@@ -2610,6 +2638,58 @@
 
     mountSingleAudioPlayer();
 
+
+
+    function segmentColor(i){ return SEGMENT_COLORS[i % SEGMENT_COLORS.length]; }
+    function addAudioSegment({name, type, url, trace=[]}) {
+      const id = 'seg_' + Date.now() + '_' + Math.random().toString(36).slice(2,7);
+      audioSegments.push({ id, name: name || '音频片段', type: type || 'file', url, trace: trace.slice ? trace.slice() : [] });
+      currentSegmentId = id;
+      renderSegmentList();
+      return id;
+    }
+    function updateCurrentSegmentTrace() {
+      if (!currentSegmentId || !points || !points.length) return;
+      const seg = audioSegments.find(s => s.id === currentSegmentId);
+      if (!seg) return;
+      seg.trace = points.map(p => ({t:p.t, x:p.x, y:p.y, pitch:p.pitch, rms:p.rms}));
+      renderSegmentList(false);
+    }
+    function renderSegmentList(updateEmpty = true) {
+      if (!segmentList) return;
+      if (!audioSegments.length) {
+        segmentList.innerHTML = '<span class="empty-segment-tip">可导入或录制多段音频，生成的旋律线会叠加显示在同一个观察区。</span>';
+        return;
+      }
+      segmentList.innerHTML = audioSegments.map((s,i)=>`<div class="segment-row" data-id="${s.id}">
+        <span class="segment-color" style="background:${segmentColor(i)}"></span>
+        <span class="segment-name" title="${escapeHtml(s.name)}">${escapeHtml(s.name)}</span>
+        <span class="segment-type">${s.type==='recording'?'录音':'导入'} · ${s.trace&&s.trace.length?s.trace.length+'点':'未分析'}</span>
+        <button type="button" data-action="play">播放</button>
+        <button type="button" data-action="remove">删除</button>
+      </div>`).join('');
+    }
+    function stopSegmentPlayers(){ segmentPlayers.forEach(a=>{try{a.pause(); a.currentTime=0;}catch(e){}}); segmentPlayers=[]; }
+    async function playSegment(id){
+      const seg=audioSegments.find(s=>s.id===id); if(!seg||!seg.url) return;
+      stopFilePlayback(); stopSegmentPlayers();
+      audioEl.dataset.sourceMode = seg.type==='recording'?'recording':'file';
+      audioEl.dataset.url = seg.url; audioEl.src = seg.url; audioEl.load(); currentSegmentId = seg.id;
+      try { await audioEl.play(); } catch(e) { console.warn(e); }
+      updateStagePlaybackUI(); draw();
+    }
+    async function playAllSegments(){
+      stopFilePlayback(); stopSegmentPlayers();
+      const startAt = 0;
+      audioSegments.forEach(seg=>{ if(!seg.url) return; const a=new Audio(seg.url); a.currentTime=startAt; segmentPlayers.push(a); });
+      try { await Promise.all(segmentPlayers.map(a=>a.play().catch(()=>{}))); } catch(e) {}
+      setStatus('<span class="pill">同时播放</span>已同时播放多段导入/录音音频。旋律线在同一观察区叠加显示。');
+    }
+    if (segmentList) segmentList.addEventListener('click', e=>{
+      const row=e.target.closest('.segment-row'); if(!row) return; const action=e.target.dataset.action; if(action==='play') playSegment(row.dataset.id); if(action==='remove'){audioSegments=audioSegments.filter(s=>s.id!==row.dataset.id); renderSegmentList(); draw();}
+    });
+    if (playAllSegmentsBtn) playAllSegmentsBtn.addEventListener('click', playAllSegments);
+    if (stopAllSegmentsBtn) stopAllSegmentsBtn.addEventListener('click', ()=>{stopSegmentPlayers(); if(audioEl&&!audioEl.paused) audioEl.pause();});
 
     function formatAudioClock(seconds) {
       if (!Number.isFinite(seconds) || seconds < 0) seconds = 0;
@@ -3041,6 +3121,8 @@
           const blob = new Blob(chunks, { type });
           if (recordedBlobUrl) URL.revokeObjectURL(recordedBlobUrl);
           recordedBlobUrl = URL.createObjectURL(blob);
+          const recTraceForSegment = (points && points.length) ? points.map(p => ({t:p.t, x:p.x, y:p.y, pitch:p.pitch, rms:p.rms})) : [];
+          addAudioSegment({name:'录音 ' + new Date().toLocaleTimeString(), type:'recording', url:recordedBlobUrl, trace:recTraceForSegment});
           const oldUrl = audioEl.dataset.url;
           if (oldUrl && oldUrl !== recordedBlobUrl) URL.revokeObjectURL(oldUrl);
           audioEl.dataset.url = recordedBlobUrl;
@@ -3312,6 +3394,7 @@
       const oldUrl = audioEl.dataset.url;
       if (oldUrl) URL.revokeObjectURL(oldUrl);
       const url = URL.createObjectURL(file);
+      addAudioSegment({name:file.name, type:'file', url, trace:[]});
       audioEl.dataset.url = url;
       audioEl.dataset.sourceMode = 'file';
       audioEl.dataset.hasMelodyTrace = 'false';
@@ -3329,7 +3412,7 @@
       setStatus('<span class="pill">已载入音频</span>' + escapeHtml(file.name) + '。页面已跳转至观察区；点击观察区唯一播放器播放后，可拖动时间条，黄色光标会实时跟进。');
     }
 
-    audioFile.addEventListener('change', (e) => handleFile(e.target.files[0]));
+    audioFile.addEventListener('change', (e) => { const files = Array.from(e.target.files || []); if (!files.length) return; files.forEach((f, idx) => { if (idx === 0) handleFile(f); else { const url = URL.createObjectURL(f); addAudioSegment({name:f.name, type:'file', url, trace:[]}); } }); });
 
     audioEl.addEventListener('loadedmetadata', () => {
       mountSingleAudioPlayer();
@@ -4185,6 +4268,7 @@
       const copy = points.map(p => ({t:p.t, x:p.x, y:p.y, pitch:p.pitch, rms:p.rms}));
       if (mode === 'file') importedTracePoints = copy;
       if (mode === 'mic' || mode === 'recording') recordedTracePoints = copy;
+      updateCurrentSegmentTrace();
       drawComparisonPanel();
     }
     function drawTraceOnComparison(ctx2, arr, color, w, h) {
@@ -4241,14 +4325,15 @@
       ctx.restore();
     }
     function drawComparisonInMainView() {
-      if (mode !== 'mic' && mode !== 'recording' && mode !== 'file') {
+      // 多段导入音频与多段录音统一叠加在同一个观察区显示，不再另设对比画布。
+      audioSegments.forEach((seg, i) => {
+        if (seg.trace && seg.trace.length > 1) drawSavedTraceOnMain(seg.trace, segmentColor(i), seg.type === 'recording' ? '录音' + (i+1) : '导入' + (i+1));
+      });
+      // 兼容旧版单条缓存。
+      if (!audioSegments.length) {
         drawSavedTraceOnMain(importedTracePoints, 'rgba(125,211,252,.92)', '导入音频');
         drawSavedTraceOnMain(recordedTracePoints, 'rgba(250,204,21,.92)', '录音');
-        return;
       }
-      // 录制或播放时仍保留另一条已生成线条作为参照，不另设对比区。
-      if (mode === 'mic' || mode === 'recording') drawSavedTraceOnMain(importedTracePoints, 'rgba(125,211,252,.78)', '导入音频');
-      if (mode === 'file') drawSavedTraceOnMain(recordedTracePoints, 'rgba(250,204,21,.78)', '录音');
     }
 
 function draw() {
