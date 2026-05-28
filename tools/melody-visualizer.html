@@ -2037,6 +2037,36 @@
 .hero-card h1{font-size:28px!important;line-height:1.15!important;}
 .visual-head .section-subtitle,.status .pill + *{display:none!important;}
 
+
+
+/* ===== V5.1 多段音频/录音叠加对比增强 ===== */
+.multi-audio-panel{border-color:rgba(125,211,252,.20)!important;}
+.multi-audio-head{align-items:center!important}.multi-audio-head h2{font-size:24px!important}.multi-audio-actions button{min-height:36px!important;}
+.segment-list{display:grid!important;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px!important;}
+.segment-row{grid-template-columns:auto auto minmax(120px,1fr)!important;gap:9px!important;padding:10px!important;position:relative;}
+.segment-check{width:16px;height:16px;accent-color:#38bdf8;}
+.segment-visible{width:16px;height:16px;accent-color:#facc15;}
+.segment-color{width:30px!important;height:5px!important;}
+.segment-meta{display:flex;flex-direction:column;gap:3px;min-width:0;}
+.segment-name{font-size:14px;}
+.segment-type{font-size:12px;color:#a8bdd1!important;}
+.segment-actions{grid-column:1/-1;display:flex;gap:7px;flex-wrap:wrap;align-items:center;}
+.segment-actions button{padding:7px 10px!important;font-size:12px!important;}
+.segment-state{margin-left:auto;font-size:12px;color:#9fb4cb;}
+.segment-row.is-playing{outline:1px solid rgba(56,189,248,.55);box-shadow:0 0 0 3px rgba(56,189,248,.08)}
+.segment-row.is-hidden{opacity:.48}.segment-row.is-analyzing{outline:1px dashed rgba(250,204,21,.55)}
+.segment-empty{grid-column:1/-1;color:#9fb4cb;line-height:1.6;padding:12px;border:1px dashed rgba(162,191,217,.18);border-radius:14px;background:rgba(255,255,255,.035)}
+.comparison-mini-legend{max-width:calc(100% - 330px);overflow:hidden;}
+.comparison-mini-legend span{white-space:nowrap;}
+@media(max-width:860px){.segment-list{grid-template-columns:1fr}.comparison-mini-legend{position:static!important;margin:8px 0 0 12px;max-width:none;pointer-events:auto}}
+
+
+
+/* === V5.3 对比观测区与音乐元素映射 === */
+.comparison-panel{display:block!important;margin-top:14px;padding:14px;border-radius:20px;background:linear-gradient(180deg,rgba(9,23,42,.94),rgba(8,18,35,.92));border:1px solid rgba(125,211,252,.15)}
+.comparison-head{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;margin-bottom:10px}.comparison-head h2{margin:0;font-size:22px}.comparison-legend{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.comparison-legend span{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border-radius:999px;border:1px solid rgba(162,191,217,.16);font-size:12px;font-weight:800}.legend-pitch{color:#fca5a5;background:rgba(248,113,113,.10)}.legend-volume{color:#86efac;background:rgba(34,197,94,.10)}.legend-rest{color:#bfdbfe;background:rgba(59,130,246,.10)}.comparison-canvas-wrap{overflow:auto;border:1px solid rgba(162,191,217,.12);border-radius:18px;background:#07111f}.comparison-canvas-wrap canvas{display:block;min-width:960px;height:270px}.comparison-tip{margin:8px 2px 0;color:#9fb4cb;font-size:13px;line-height:1.6}.comparison-mini-legend .legend-element{color:#d1fae5!important;background:rgba(16,185,129,.12)}
+@media(max-width:760px){.comparison-head{align-items:flex-start;flex-direction:column}.comparison-legend{justify-content:flex-start}.comparison-canvas-wrap canvas{min-width:780px}}
+
 </style>
 <!-- V4.4: restored from V4.2 visualizer with detailed operation manual retained. -->
 </head>
@@ -2229,7 +2259,7 @@
           <span class="switch-track" aria-hidden="true"></span>
           <span class="switch-text"></span>
         </label>
-        <div class="comparison-mini-legend"><span class="file-line">导入音频</span><span class="record-line">录音演唱</span></div><canvas id="canvas"></canvas>
+        <div class="comparison-mini-legend" id="multiLegend"><span class="file-line">导入音频</span><span class="record-line">录音演唱</span></div><canvas id="canvas"></canvas>
       </div>
     </section>
 
@@ -2250,9 +2280,30 @@
     <section class="panel multi-audio-panel" aria-label="多段音频旋律线管理">
       <div class="multi-audio-head">
         <div><p class="eyebrow">多段对比</p><h2>导入音频 / 录音旋律线</h2></div>
-        <div class="multi-audio-actions"><button id="playAllSegments" class="ghost">▶ 同时播放</button><button id="stopAllSegments" class="ghost">■ 停止全部</button></div>
+        <div class="multi-audio-actions">
+          <button id="playAllSegments" class="ghost">▶ 同时播放已选</button>
+          <button id="stopAllSegments" class="ghost">■ 停止全部</button>
+          <button id="analyzeAllSegments" class="ghost">⌁ 分析全部旋律线</button>
+          <button id="clearSegments" class="ghost">⌫ 清空片段</button>
+        </div>
       </div>
       <div id="segmentList" class="segment-list"><span class="empty-segment-tip">可导入或录制多段音频，生成的旋律线会叠加显示在同一个观察区。</span></div>
+    </section>
+
+    <section class="panel comparison-panel" aria-label="对比观测区">
+      <div class="comparison-head">
+        <div>
+          <p class="eyebrow">对比观测区</p>
+          <h2>多段旋律线同屏对比</h2>
+        </div>
+        <div class="comparison-legend">
+          <span class="legend-pitch">音高：低音冷色 / 高音暖色</span>
+          <span class="legend-volume">力度：音量越大线条越粗</span>
+          <span class="legend-rest">休止：断线留白</span>
+        </div>
+      </div>
+      <div class="comparison-canvas-wrap"><canvas id="comparisonCanvas"></canvas></div>
+      <p class="comparison-tip">勾选“显示”的导入音频或录音都会叠加在此处；可单独播放或选择多段同时播放，用于范唱、学生演唱与多次练习对比。</p>
     </section>
 
     <section id="notationPanel" class="notation-panel panel" aria-label="旋律转谱结果">
@@ -2308,7 +2359,7 @@
 <a href="#m3">三、学生快速上手：3 分钟会操作</a>
 <a href="#m4">四、教师课堂流程：课前、课中、课后</a>
 <a href="#m5">五、录音功能：开始、暂停、继续、结束</a>
-<a href="#m6">六、音频上传与播放器</a>
+<a href="#m6">六、音频上传、多段对比与播放器</a>
 <a href="#m7">七、观察区读图方法</a>
 <a href="#m8">八、简谱 / 五线谱生成与谱面设置</a>
 <a href="#m9">九功能</a>
@@ -2382,8 +2433,8 @@
 </table>
 <p class="manual-note">录音时请尽量保持环境安静，演唱者距离麦克风约 20—50 cm。声源太远会导致识别不稳，声源太近可能出现喷麦尖峰。</p>
 </section>
-<section id="m6"><h3>六、音频上传与播放器</h3>
-<p>系统已改为单播放器机制：上传音频或录音生成后，使用 audio 播放器进行播放。</p>
+<section id="m6"><h3>六、音频上传、多段对比与播放器</h3>
+<p>系统支持一次上传多段 mp3/WAV，也支持多次录音。每段音频会加入“多段对比”列表，可勾选显示旋律线、单独播放，也可同时播放已选片段。所有旋律线会叠加显示在同一个观察区，便于范唱、学生演唱和多次练习之间进行对比。</p>
 <table>
 <thead><tr><th>功能</th><th>操作方法</th><th>说明</th></tr></thead>
 <tbody>
@@ -2479,6 +2530,8 @@
     const segmentList = $('segmentList');
     const playAllSegmentsBtn = $('playAllSegments');
     const stopAllSegmentsBtn = $('stopAllSegments');
+    const analyzeAllSegmentsBtn = $('analyzeAllSegments');
+    const clearSegmentsBtn = $('clearSegments');
 
     const startMicBtn = $('startMic');
     const stopMicBtn = $('stopMic');
@@ -2641,55 +2694,265 @@
 
 
     function segmentColor(i){ return SEGMENT_COLORS[i % SEGMENT_COLORS.length]; }
-    function addAudioSegment({name, type, url, trace=[]}) {
-      const id = 'seg_' + Date.now() + '_' + Math.random().toString(36).slice(2,7);
-      audioSegments.push({ id, name: name || '音频片段', type: type || 'file', url, trace: trace.slice ? trace.slice() : [] });
+    function segmentColorById(id){ const idx = audioSegments.findIndex(s => s.id === id); return segmentColor(Math.max(0, idx)); }
+    function makeSegmentId(){ return 'seg_' + Date.now() + '_' + Math.random().toString(36).slice(2,7); }
+    function addAudioSegment({name, type, url, trace=[], file=null, duration=0}) {
+      const id = makeSegmentId();
+      audioSegments.push({
+        id,
+        name: name || '音频片段',
+        type: type || 'file',
+        url,
+        file: file || null,
+        duration: duration || 0,
+        trace: Array.isArray(trace) ? trace.slice() : [],
+        visible: true,
+        selected: true,
+        analyzing: false,
+        playing: false
+      });
       currentSegmentId = id;
       renderSegmentList();
+      updateMultiLegend();
       return id;
     }
     function updateCurrentSegmentTrace() {
       if (!currentSegmentId || !points || !points.length) return;
       const seg = audioSegments.find(s => s.id === currentSegmentId);
       if (!seg) return;
-      seg.trace = points.map(p => ({t:p.t, x:p.x, y:p.y, pitch:p.pitch, rms:p.rms}));
+      seg.trace = points.map(p => ({t:p.t, x:p.x, y:p.y, pitch:p.pitch, displayPitch:p.displayPitch || p.pitch, rms:p.rms, width:p.width||2, alpha:p.alpha||.72, color:p.color||segmentColorById(seg.id), note:p.note, breakBefore:!!p.breakBefore}));
+      seg.duration = Math.max(seg.duration || 0, ...seg.trace.map(p => p.t || 0));
       renderSegmentList(false);
+      updateMultiLegend();
+    }
+    function updateMultiLegend(){
+      const legend = document.getElementById('multiLegend');
+      if (!legend) return;
+      const visible = audioSegments.filter(s => s.visible !== false && s.trace && s.trace.length);
+      if (!visible.length) {
+        legend.innerHTML = '<span class="file-line">导入音频</span><span class="record-line">录音演唱</span><span class="legend-element">音高=颜色｜力度=线宽</span>';
+        return;
+      }
+      legend.innerHTML = visible.slice(0, 6).map(s => `<span class="multi-line" style="color:${segmentColorById(s.id)}">${escapeHtml(s.name)}</span>`).join('');
     }
     function renderSegmentList(updateEmpty = true) {
       if (!segmentList) return;
       if (!audioSegments.length) {
-        segmentList.innerHTML = '<span class="empty-segment-tip">可导入或录制多段音频，生成的旋律线会叠加显示在同一个观察区。</span>';
+        segmentList.innerHTML = '<div class="segment-empty">可一次导入多段音频，或多次录音。每段音频会生成独立旋律线，并叠加显示在同一个观察区；可勾选显示、选择播放、单独播放或同时播放。</div>';
+        updateMultiLegend();
         return;
       }
-      segmentList.innerHTML = audioSegments.map((s,i)=>`<div class="segment-row" data-id="${s.id}">
-        <span class="segment-color" style="background:${segmentColor(i)}"></span>
-        <span class="segment-name" title="${escapeHtml(s.name)}">${escapeHtml(s.name)}</span>
-        <span class="segment-type">${s.type==='recording'?'录音':'导入'} · ${s.trace&&s.trace.length?s.trace.length+'点':'未分析'}</span>
-        <button type="button" data-action="play">播放</button>
-        <button type="button" data-action="remove">删除</button>
-      </div>`).join('');
+      segmentList.innerHTML = audioSegments.map((s,i)=>{
+        const state = s.analyzing ? '分析中…' : (s.trace && s.trace.length ? (s.trace.length + ' 点') : '未分析');
+        const dur = s.duration ? ' · ' + formatAudioClock(s.duration) : '';
+        const rowCls = [s.playing ? 'is-playing' : '', s.visible === false ? 'is-hidden' : '', s.analyzing ? 'is-analyzing' : ''].filter(Boolean).join(' ');
+        return `<div class="segment-row ${rowCls}" data-id="${s.id}">
+          <input class="segment-check" type="checkbox" data-action="select" ${s.selected !== false ? 'checked' : ''} title="加入同时播放">
+          <input class="segment-visible" type="checkbox" data-action="visible" ${s.visible !== false ? 'checked' : ''} title="显示/隐藏旋律线">
+          <div class="segment-meta">
+            <span class="segment-name" title="${escapeHtml(s.name)}"><span class="segment-color" style="display:inline-block;background:${segmentColor(i)}"></span> ${escapeHtml(s.name)}</span>
+            <span class="segment-type">${s.type==='recording'?'录音':'导入'}${dur} · ${state}</span>
+          </div>
+          <div class="segment-actions">
+            <button type="button" data-action="play">${s.playing ? 'Ⅱ 暂停' : '▶ 单独播放'}</button>
+            <button type="button" data-action="analyze">⌁ 生成旋律线</button>
+            <button type="button" data-action="remove">删除</button>
+            <span class="segment-state">${s.visible === false ? '已隐藏' : '同屏显示'}</span>
+          </div>
+        </div>`;
+      }).join('');
+      updateMultiLegend();
     }
-    function stopSegmentPlayers(){ segmentPlayers.forEach(a=>{try{a.pause(); a.currentTime=0;}catch(e){}}); segmentPlayers=[]; }
+    function setSegmentPlaying(id, playing){
+      audioSegments.forEach(s => { if (s.id === id) s.playing = !!playing; else if (playing) s.playing = false; });
+      renderSegmentList(false);
+    }
+    function stopSegmentPlayers(){
+      segmentPlayers.forEach(a=>{try{a.pause(); a.currentTime=0;}catch(e){}});
+      segmentPlayers=[];
+      audioSegments.forEach(s => s.playing = false);
+      if (playAllSegmentsBtn) playAllSegmentsBtn.textContent = '▶ 同时播放已选';
+      renderSegmentList(false);
+      draw();
+    }
     async function playSegment(id){
       const seg=audioSegments.find(s=>s.id===id); if(!seg||!seg.url) return;
-      stopFilePlayback(); stopSegmentPlayers();
+      if (currentSegmentId === id && audioEl && !audioEl.paused) {
+        audioEl.pause();
+        seg.playing = false;
+        renderSegmentList(false);
+        return;
+      }
+      stopSegmentPlayers();
+      stopFilePlayback();
+      currentSegmentId = seg.id;
       audioEl.dataset.sourceMode = seg.type==='recording'?'recording':'file';
-      audioEl.dataset.url = seg.url; audioEl.src = seg.url; audioEl.load(); currentSegmentId = seg.id;
-      try { await audioEl.play(); } catch(e) { console.warn(e); }
-      updateStagePlaybackUI(); draw();
+      audioEl.dataset.url = seg.url;
+      audioEl.dataset.hasMelodyTrace = seg.trace && seg.trace.length ? 'true' : 'false';
+      playbackCursorOnly = !!(seg.trace && seg.trace.length);
+      audioEl.src = seg.url;
+      audioEl.load();
+      mode = seg.type === 'recording' ? 'recording' : 'file';
+      setSegmentPlaying(id, true);
+      try { await audioEl.play(); } catch(e) { console.warn(e); setStatus('<span class="pill">播放提示</span>浏览器阻止自动播放，请再点击一次播放按钮。'); }
+      updateStagePlaybackUI();
+      draw();
     }
     async function playAllSegments(){
-      stopFilePlayback(); stopSegmentPlayers();
-      const startAt = 0;
-      audioSegments.forEach(seg=>{ if(!seg.url) return; const a=new Audio(seg.url); a.currentTime=startAt; segmentPlayers.push(a); });
+      const alreadyPlaying = segmentPlayers.some(a => !a.paused);
+      if (alreadyPlaying) {
+        segmentPlayers.forEach(a => { try { a.pause(); } catch(e) {} });
+        if (playAllSegmentsBtn) playAllSegmentsBtn.textContent = '▶ 继续同时播放';
+        audioSegments.forEach(s => { if (s._multiPlaying) s.playing = false; });
+        renderSegmentList(false);
+        return;
+      }
+      if (segmentPlayers.length) {
+        try { await Promise.all(segmentPlayers.map(a => a.play().catch(()=>{}))); } catch(e) {}
+        if (playAllSegmentsBtn) playAllSegmentsBtn.textContent = 'Ⅱ 暂停同时播放';
+        audioSegments.forEach(s => { if (s._multiPlaying) s.playing = true; });
+        renderSegmentList(false);
+        return;
+      }
+      stopFilePlayback();
+      stopSegmentPlayers();
+      const selected = audioSegments.filter(s => s.selected !== false && s.url);
+      if (!selected.length) { setStatus('<span class="pill">未选择</span>请先勾选需要同时播放的音频片段。'); return; }
+      selected.forEach(seg=>{
+        const a=new Audio(seg.url);
+        a.currentTime=0;
+        a.dataset.segmentId=seg.id;
+        a.addEventListener('ended',()=>{ seg.playing=false; renderSegmentList(false); });
+        segmentPlayers.push(a);
+        seg._multiPlaying = true;
+        seg.playing = true;
+      });
       try { await Promise.all(segmentPlayers.map(a=>a.play().catch(()=>{}))); } catch(e) {}
-      setStatus('<span class="pill">同时播放</span>已同时播放多段导入/录音音频。旋律线在同一观察区叠加显示。');
+      if (playAllSegmentsBtn) playAllSegmentsBtn.textContent = 'Ⅱ 暂停同时播放';
+      renderSegmentList(false);
+      setStatus('<span class="pill">同时播放</span>已同时播放勾选的导入音频/录音音频。旋律线在同一观察区叠加显示，可通过勾选“显示”隐藏或显示各段。');
+      draw();
+    }
+    function removeSegment(id){
+      const seg = audioSegments.find(s=>s.id===id);
+      if (!seg) return;
+      if (audioEl && audioEl.dataset && audioEl.dataset.url === seg.url) { try { audioEl.pause(); } catch(e){} audioEl.removeAttribute('src'); audioEl.load(); }
+      segmentPlayers = segmentPlayers.filter(a => { if (a.dataset.segmentId === id) { try{a.pause();}catch(e){} return false; } return true; });
+      audioSegments = audioSegments.filter(s=>s.id!==id);
+      if (currentSegmentId === id) currentSegmentId = audioSegments.length ? audioSegments[0].id : null;
+      try { if (seg.url && seg.url.startsWith('blob:')) URL.revokeObjectURL(seg.url); } catch(e) {}
+      renderSegmentList();
+      draw();
+    }
+    async function analyzeSegmentById(id){
+      const seg = audioSegments.find(s=>s.id===id);
+      if (!seg) return;
+      if (seg.trace && seg.trace.length) { draw(); return; }
+      seg.analyzing = true;
+      renderSegmentList(false);
+      setStatus('<span class="pill">旋律分析</span>正在分析“' + escapeHtml(seg.name) + '”的旋律线。');
+      try {
+        const trace = await analyzeAudioSegmentToTrace(seg);
+        seg.trace = trace;
+        seg.duration = Math.max(seg.duration || 0, trace.length ? Math.max(...trace.map(p=>p.t||0)) : 0);
+        seg.visible = true;
+        setStatus('<span class="pill">分析完成</span>“' + escapeHtml(seg.name) + '”已生成旋律线，可同屏对比或播放。');
+      } catch (err) {
+        console.warn(err);
+        setStatus('<span class="pill">分析失败</span>“' + escapeHtml(seg.name) + '”暂时无法离线分析，可单独播放该音频进行实时观测。');
+      } finally {
+        seg.analyzing = false;
+        renderSegmentList(false);
+        draw();
+      }
+    }
+    async function analyzeAllSegments(){
+      const pending = audioSegments.filter(s => !(s.trace && s.trace.length));
+      for (const seg of pending) await analyzeSegmentById(seg.id);
+      if (!pending.length) setStatus('<span class="pill">无需分析</span>所有片段都已有旋律线。');
+    }
+    async function analyzeAudioSegmentToTrace(seg){
+      await ensureAudioContext();
+      let arr;
+      if (seg.file && seg.file.arrayBuffer) arr = await seg.file.arrayBuffer();
+      else {
+        const res = await fetch(seg.url);
+        arr = await res.arrayBuffer();
+      }
+      const decoded = await audioCtx.decodeAudioData(arr.slice(0));
+      const sr = decoded.sampleRate;
+      const ch0 = decoded.getChannelData(0);
+      const ch1 = decoded.numberOfChannels > 1 ? decoded.getChannelData(1) : null;
+      const duration = decoded.duration || 0;
+      const pxPerSec = Number(controls.speed.value || 95);
+      const displayRange = getDisplayPitchRange();
+      const analysisRange = getAnalysisPitchRange(displayRange.minFreq, displayRange.maxFreq);
+      const silenceThreshold = Math.max(Number(controls.silence.value || 0.018) * 0.72, 0.0045);
+      const hopSec = 0.075;
+      const win = Math.min(8192, Math.max(4096, Math.round(sr * 0.12)));
+      const trace = [];
+      let wasSilent = true;
+      let lastT = 0;
+      for (let t=0; t<duration; t+=hopSec) {
+        const center = Math.floor(t * sr);
+        let start = Math.max(0, center - Math.floor(win/2));
+        let end = Math.min(ch0.length, start + win);
+        if (end - start < 2048) continue;
+        const tmp = new Float32Array(end - start);
+        for (let i=0; i<tmp.length; i++) tmp[i] = ch1 ? (ch0[start+i] + ch1[start+i]) * 0.5 : ch0[start+i];
+        const rms = computeRMS(tmp);
+        if (rms < silenceThreshold) { wasSilent = true; continue; }
+        const detected = detectPitch(tmp, sr, analysisRange.minFreq, analysisRange.maxFreq);
+        if (!detected || !isFinite(detected.frequency)) { wasSilent = true; continue; }
+        const displayPitch = controls.pitchSnap && controls.pitchSnap.checked ? midiToFreq(Math.round(freqToMidiFloat(detected.frequency))) : detected.frequency;
+        const note = freqToNote(detected.frequency);
+        const x = 48 + t * pxPerSec;
+        const y = freqToY(displayPitch, displayRange.minFreq, displayRange.maxFreq);
+        const ampNorm = clamp((rms - silenceThreshold) / 0.16, 0, 1);
+        trace.push({
+          t, x, y,
+          pitch: detected.frequency,
+          displayPitch,
+          rms,
+          width: 1.4 + ampNorm * 6.5,
+          alpha: 0.32 + ampNorm * 0.62,
+          color: pitchToColor(displayPitch, displayRange.minFreq, displayRange.maxFreq),
+          note,
+          breakBefore: wasSilent || (t - lastT > 0.18)
+        });
+        wasSilent = false;
+        lastT = t;
+      }
+      growCanvasIfNeeded(48 + Math.max(duration, 8) * pxPerSec + 260);
+      return trace;
     }
     if (segmentList) segmentList.addEventListener('click', e=>{
-      const row=e.target.closest('.segment-row'); if(!row) return; const action=e.target.dataset.action; if(action==='play') playSegment(row.dataset.id); if(action==='remove'){audioSegments=audioSegments.filter(s=>s.id!==row.dataset.id); renderSegmentList(); draw();}
+      const row=e.target.closest('.segment-row'); if(!row) return;
+      const id = row.dataset.id;
+      const action=e.target.dataset.action;
+      const seg = audioSegments.find(s=>s.id===id);
+      if (!seg) return;
+      if(action==='play') playSegment(id);
+      if(action==='analyze') analyzeSegmentById(id);
+      if(action==='remove') removeSegment(id);
+      if(action==='visible') { seg.visible = e.target.checked; renderSegmentList(false); draw(); }
+      if(action==='select') { seg.selected = e.target.checked; renderSegmentList(false); }
     });
     if (playAllSegmentsBtn) playAllSegmentsBtn.addEventListener('click', playAllSegments);
     if (stopAllSegmentsBtn) stopAllSegmentsBtn.addEventListener('click', ()=>{stopSegmentPlayers(); if(audioEl&&!audioEl.paused) audioEl.pause();});
+    if (analyzeAllSegmentsBtn) analyzeAllSegmentsBtn.addEventListener('click', analyzeAllSegments);
+    if (clearSegmentsBtn) clearSegmentsBtn.addEventListener('click', ()=>{
+      stopSegmentPlayers();
+      if (audioEl && !audioEl.paused) audioEl.pause();
+      audioSegments.forEach(s=>{ try{ if(s.url && s.url.startsWith('blob:')) URL.revokeObjectURL(s.url); }catch(e){} });
+      audioSegments = [];
+      currentSegmentId = null;
+      importedTracePoints = [];
+      recordedTracePoints = [];
+      renderSegmentList();
+      draw();
+      setStatus('<span class="pill">已清空片段</span>可重新导入或录制多段音频。');
+    });
 
     function formatAudioClock(seconds) {
       if (!Number.isFinite(seconds) || seconds < 0) seconds = 0;
@@ -3190,7 +3453,9 @@
     }
 
     function hasSavedMelodyTrace() {
-      return audioEl && audioEl.dataset && audioEl.dataset.hasMelodyTrace === 'true' && points.length > 0;
+      if (audioEl && audioEl.dataset && audioEl.dataset.hasMelodyTrace === 'true') return true;
+      const seg = audioSegments.find(s => s.id === currentSegmentId);
+      return !!(seg && seg.trace && seg.trace.length > 0);
     }
 
     function setMelodyTraceSaved(saved) {
@@ -3256,6 +3521,55 @@
       try { if (analyser) analyser.disconnect(); } catch (e) {}
     }
 
+    function getMicrophoneErrorMessage(err) {
+      const name = err && err.name ? err.name : '';
+      const msg = err && err.message ? err.message : String(err || '未知错误');
+      if (name === 'NotAllowedError' || name === 'PermissionDeniedError') {
+        return '麦克风权限被拒绝。请点击浏览器地址栏左侧的权限图标，允许“麦克风”，然后刷新页面重试。';
+      }
+      if (name === 'NotFoundError' || name === 'DevicesNotFoundError') {
+        return '没有检测到可用麦克风。请连接麦克风，或在系统设置中选择输入设备。';
+      }
+      if (name === 'NotReadableError' || name === 'TrackStartError') {
+        return '麦克风正被其他软件占用，或浏览器暂时无法读取。请关闭其他录音软件后重试。';
+      }
+      if (name === 'SecurityError') {
+        return '当前页面不允许访问麦克风。请使用 HTTPS 网站或 localhost 环境打开。';
+      }
+      if (name === 'OverconstrainedError' || name === 'ConstraintNotSatisfiedError') {
+        return '当前麦克风不支持原参数，系统已改为基础拾音参数。请再次点击开始录音。';
+      }
+      return msg;
+    }
+
+    async function requestMicrophoneStream() {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        throw new Error('当前浏览器不支持麦克风录音。请使用 Chrome、Edge 或 Safari 的较新版本。');
+      }
+      if (!window.isSecureContext && location.protocol !== 'file:') {
+        throw new Error('浏览器要求麦克风在 HTTPS 或 localhost 环境下使用。请部署到 Cloudflare Pages / GitHub Pages，或本地用 localhost 打开。');
+      }
+
+      // 先用宽松约束请求麦克风，保证浏览器能弹出“允许麦克风”窗口。
+      // 之前直接写 sampleRate / sampleSize / latency，部分设备会在弹窗前拒绝，导致用户看不到授权提示。
+      const preferred = {
+        audio: {
+          echoCancellation: false,
+          noiseSuppression: false,
+          autoGainControl: false,
+          channelCount: { ideal: 1 }
+        }
+      };
+      try {
+        return await navigator.mediaDevices.getUserMedia(preferred);
+      } catch (err) {
+        if (err && (err.name === 'OverconstrainedError' || err.name === 'ConstraintNotSatisfiedError')) {
+          return await navigator.mediaDevices.getUserMedia({ audio: true });
+        }
+        throw err;
+      }
+    }
+
     async function startMic() {
       if (recordingStatus === 'paused') {
         resumeRecording();
@@ -3263,20 +3577,16 @@
       }
       if (recordingStatus === 'recording' || recordingStatus === 'countIn' || recordingStatus === 'finishing') return;
       try {
+        setStatus('<span class="pill">请求权限</span>正在请求麦克风权限。若浏览器弹出提示，请选择“允许”。');
+        updateRecordingState('请求麦克风权限');
+
+        // 关键修复：在用户点击“开始录音”后立即请求麦克风，避免异步音频初始化导致权限弹窗不出现。
+        const stream = await requestMicrophoneStream();
+
         await ensureAudioContext();
         stopFilePlayback();
         disconnectCurrentSources();
-        micStream = await navigator.mediaDevices.getUserMedia({
-          audio: {
-            echoCancellation: false,
-            noiseSuppression: false,
-            autoGainControl: false,
-            channelCount: 1,
-            sampleRate: 48000,
-            sampleSize: 16,
-            latency: 0.02
-          }
-        });
+        micStream = stream;
         micSource = audioCtx.createMediaStreamSource(micStream);
         micSource.connect(analyser);
         mode = 'mic';
@@ -3309,7 +3619,13 @@
         recordingStatus = 'idle';
         updateRecordingControls();
         hideCountIn();
-        setStatus('<span class="pill" style="background:rgba(251,113,133,.18);color:#fecdd3;border-color:rgba(251,113,133,.32)">无法开始录音</span>' + escapeHtml(err.message || String(err)) + '。请确认浏览器权限，并使用 HTTPS 或 localhost 打开。');
+        try {
+          if (micStream) micStream.getTracks().forEach(track => track.stop());
+        } catch (e) {}
+        micStream = null;
+        const detail = getMicrophoneErrorMessage(err);
+        setStatus('<span class="pill" style="background:rgba(251,113,133,.18);color:#fecdd3;border-color:rgba(251,113,133,.32)">无法开始录音</span>' + escapeHtml(detail));
+        updateRecordingState('录音未启动');
       }
     }
 
@@ -3386,33 +3702,39 @@
       if (!audioEl.paused) audioEl.pause();
     }
 
-    async function handleFile(file) {
+    async function handleFile(file, { makePrimary = true } = {}) {
       if (!file) return;
       await ensureAudioContext();
       stopMic({ discardRecording: true });
       disconnectCurrentSources();
-      const oldUrl = audioEl.dataset.url;
-      if (oldUrl) URL.revokeObjectURL(oldUrl);
       const url = URL.createObjectURL(file);
-      addAudioSegment({name:file.name, type:'file', url, trace:[]});
-      audioEl.dataset.url = url;
-      audioEl.dataset.sourceMode = 'file';
-      audioEl.dataset.hasMelodyTrace = 'false';
-      playbackCursorOnly = false;
-      audioEl.src = url;
-      audioEl.load();
-      syncStageAudioElement({ hard: true, mirrorPlayState: false });
-      updateStagePlaybackUI();
-      mode = 'file';
-      importedTracePoints = [];
-      prepareAudioElementPlayback();
-      resetAnalysisState();
-      updateRecordingState('已载入音频');
-      scrollToObservation();
-      setStatus('<span class="pill">已载入音频</span>' + escapeHtml(file.name) + '。页面已跳转至观察区；点击观察区唯一播放器播放后，可拖动时间条，黄色光标会实时跟进。');
+      const id = addAudioSegment({name:file.name, type:'file', url, trace:[], file});
+      const seg = audioSegments.find(s => s.id === id);
+      if (makePrimary) {
+        audioEl.dataset.url = url;
+        audioEl.dataset.sourceMode = 'file';
+        audioEl.dataset.hasMelodyTrace = 'false';
+        playbackCursorOnly = false;
+        audioEl.src = url;
+        audioEl.load();
+        syncStageAudioElement({ hard: true, mirrorPlayState: false });
+        updateStagePlaybackUI();
+        mode = 'file';
+        currentSegmentId = id;
+        importedTracePoints = [];
+        prepareAudioElementPlayback();
+        resetAnalysisState();
+        updateRecordingState('已载入音频');
+        scrollToObservation();
+      }
+      renderSegmentList(false);
+      setStatus('<span class="pill">已添加音频</span>' + escapeHtml(file.name) + ' 已加入多段对比列表，正在生成旋律线。');
+      // 上传后自动离线生成旋律线；若浏览器不支持该音频解码，可单独播放进行实时观测。
+      analyzeSegmentById(id).catch(err => console.warn(err));
+      return id;
     }
 
-    audioFile.addEventListener('change', (e) => { const files = Array.from(e.target.files || []); if (!files.length) return; files.forEach((f, idx) => { if (idx === 0) handleFile(f); else { const url = URL.createObjectURL(f); addAudioSegment({name:f.name, type:'file', url, trace:[]}); } }); });
+    audioFile.addEventListener('change', (e) => { const files = Array.from(e.target.files || []); if (!files.length) return; files.forEach((f, idx) => handleFile(f, { makePrimary: idx === 0 })); audioFile.value = ''; });
 
     audioEl.addEventListener('loadedmetadata', () => {
       mountSingleAudioPlayer();
@@ -4271,63 +4593,110 @@
       updateCurrentSegmentTrace();
       drawComparisonPanel();
     }
-    function drawTraceOnComparison(ctx2, arr, color, w, h) {
+    function tracePointColor(p, fallback) {
+      const f = Number(p && (p.displayPitch || p.pitch));
+      if (isFinite(f) && f > 0) {
+        const range = getDisplayPitchRange();
+        return pitchToColor(f, range.minFreq, range.maxFreq);
+      }
+      return fallback || 'rgba(125,211,252,.92)';
+    }
+    function tracePointWidth(p, scale = 1) {
+      const w = Number(p && p.width);
+      if (isFinite(w) && w > 0) return clamp(w * scale, 1.1, 10);
+      const rms = Number(p && p.rms) || 0;
+      return clamp((1.4 + rms * 55) * scale, 1.1, 8);
+    }
+    function tracePointAlpha(p) {
+      const a = Number(p && p.alpha);
+      if (isFinite(a)) return clamp(a, .22, .96);
+      return .72;
+    }
+    function drawVariableTrace(ctx2, arr, fallbackColor, mapX, mapY, widthScale = 1, label = '') {
       if (!arr || arr.length < 2) return;
-      const minT = Math.min(...arr.map(p => p.t));
-      const maxT = Math.max(...arr.map(p => p.t));
-      const spanT = Math.max(1, maxT - minT);
-      const pad = 22;
-      ctx2.save(); ctx2.strokeStyle = color; ctx2.lineWidth = 2.5; ctx2.lineJoin = 'round'; ctx2.lineCap = 'round'; ctx2.beginPath();
-      arr.forEach((p, i) => { const x = pad + ((p.t - minT) / spanT) * (w - pad * 2); const y = pad + (p.y / Math.max(1, canvasHeight)) * (h - pad * 2); if (i === 0) ctx2.moveTo(x, y); else ctx2.lineTo(x, y); });
-      ctx2.stroke(); ctx2.restore();
+      ctx2.save();
+      ctx2.lineCap = 'round';
+      ctx2.lineJoin = 'round';
+      let prev = null;
+      for (const p of arr) {
+        if (!p || !isFinite(p.x) || !isFinite(p.y)) { prev = null; continue; }
+        const x = mapX ? mapX(p) : p.x;
+        const y = mapY ? mapY(p) : p.y;
+        if (!isFinite(x) || !isFinite(y) || p.breakBefore) { prev = {x, y, p}; continue; }
+        if (prev) {
+          ctx2.beginPath();
+          ctx2.strokeStyle = tracePointColor(p, fallbackColor);
+          ctx2.globalAlpha = tracePointAlpha(p);
+          ctx2.lineWidth = tracePointWidth(p, widthScale);
+          ctx2.moveTo(prev.x, prev.y);
+          ctx2.lineTo(x, y);
+          ctx2.stroke();
+        }
+        prev = {x, y, p};
+      }
+      const first = arr.find(p => p && isFinite(p.x) && isFinite(p.y));
+      if (first && label) {
+        const lx = mapX ? mapX(first) : first.x;
+        const ly = mapY ? mapY(first) : first.y;
+        ctx2.globalAlpha = .96;
+        ctx2.fillStyle = fallbackColor || 'rgba(125,211,252,.92)';
+        roundRect(ctx2, lx + 8, Math.max(18, ly - 28), Math.max(78, Math.min(150, label.length * 12 + 24)), 24, 12);
+        ctx2.fill();
+        ctx2.fillStyle = '#07111f';
+        ctx2.font = 'bold 11px ui-sans-serif, system-ui, sans-serif';
+        ctx2.fillText(label, lx + 18, Math.max(35, ly - 12));
+      }
+      ctx2.restore();
+    }
+    function getVisibleTracesForComparison() {
+      const traces = [];
+      audioSegments.forEach((seg, i) => {
+        if (seg.visible === false) return;
+        if (seg.trace && seg.trace.length > 1) traces.push({trace: seg.trace, color: segmentColor(i), label: seg.name || (seg.type === 'recording' ? '录音' : '导入')});
+      });
+      if (!traces.length) {
+        if (importedTracePoints.length > 1) traces.push({trace: importedTracePoints, color:'rgba(125,211,252,.92)', label:'导入音频'});
+        if (recordedTracePoints.length > 1) traces.push({trace: recordedTracePoints, color:'rgba(250,204,21,.92)', label:'录音'});
+      }
+      return traces;
     }
     function drawComparisonPanel() {
       if (!comparisonCanvas || !comparisonCtx) return;
       const wrap = comparisonCanvas.parentElement;
-      const rectW = Math.max(900, wrap ? wrap.clientWidth : 900);
-      const h = 250;
+      const rectW = Math.max(960, wrap ? wrap.clientWidth : 960);
+      const h = 270;
       const ratio = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
       comparisonCanvas.style.width = rectW + 'px'; comparisonCanvas.style.height = h + 'px'; comparisonCanvas.width = Math.floor(rectW * ratio); comparisonCanvas.height = Math.floor(h * ratio);
       const c = comparisonCtx; c.setTransform(ratio, 0, 0, ratio, 0, 0); c.clearRect(0,0,rectW,h);
-      const grd = c.createLinearGradient(0,0,0,h); grd.addColorStop(0,'rgba(8,20,38,.96)'); grd.addColorStop(1,'rgba(4,12,24,.96)'); c.fillStyle = grd; c.fillRect(0,0,rectW,h);
-      c.strokeStyle = 'rgba(162,191,217,.12)'; c.lineWidth = 1; for(let x=0;x<rectW;x+=80){c.beginPath();c.moveTo(x,0);c.lineTo(x,h);c.stroke();} for(let y=0;y<h;y+=50){c.beginPath();c.moveTo(0,y);c.lineTo(rectW,y);c.stroke();}
-      if (!importedTracePoints.length && !recordedTracePoints.length) { c.fillStyle = 'rgba(226,238,249,.72)'; c.font = '15px ui-sans-serif, system-ui, sans-serif'; c.fillText('暂无对比数据：先上传音频播放，再录音生成两条旋律线。', 26, 44); return; }
-      drawTraceOnComparison(c, importedTracePoints, 'rgba(99,199,216,.95)', rectW, h); drawTraceOnComparison(c, recordedTracePoints, 'rgba(245,190,106,.96)', rectW, h);
+      const grd = c.createLinearGradient(0,0,0,h); grd.addColorStop(0,'rgba(8,20,38,.98)'); grd.addColorStop(1,'rgba(4,12,24,.98)'); c.fillStyle = grd; c.fillRect(0,0,rectW,h);
+      c.strokeStyle = 'rgba(162,191,217,.10)'; c.lineWidth = 1;
+      for(let x=0;x<rectW;x+=80){c.beginPath();c.moveTo(x,0);c.lineTo(x,h);c.stroke();}
+      for(let y=0;y<h;y+=45){c.beginPath();c.moveTo(0,y);c.lineTo(rectW,y);c.stroke();}
+      const traces = getVisibleTracesForComparison();
+      if (!traces.length) { c.fillStyle = 'rgba(226,238,249,.72)'; c.font = '15px ui-sans-serif, system-ui, sans-serif'; c.fillText('暂无对比数据：上传多段音频或完成多次录音后，可在这里同时查看各段旋律线。', 26, 44); return; }
+      let maxT = 1;
+      traces.forEach(item => item.trace.forEach(p => { if (isFinite(p.t)) maxT = Math.max(maxT, p.t); }));
+      const padX = 28, padY = 22;
+      traces.forEach(item => {
+        drawVariableTrace(c, item.trace, item.color, p => padX + ((p.t || 0) / maxT) * (rectW - padX * 2), p => padY + (p.y / Math.max(1, canvasHeight)) * (h - padY * 2), .64, item.label);
+      });
+      c.save();
+      c.globalAlpha = .9;
+      c.fillStyle = 'rgba(226,238,249,.72)';
+      c.font = '12px ui-sans-serif, system-ui, sans-serif';
+      c.fillText('音高色彩：低音偏冷、高音偏暖；力度映射：音量越大线条越粗；休止/换气：断线留白。', 26, h - 16);
+      c.restore();
     }
-
 
     function drawSavedTraceOnMain(arr, color, label) {
       if (!arr || arr.length < 2) return;
-      ctx.save();
-      ctx.lineCap = 'round';
-      ctx.lineJoin = 'round';
-      ctx.strokeStyle = color;
-      ctx.lineWidth = 2.8;
-      ctx.globalAlpha = 0.88;
-      ctx.beginPath();
-      let started = false;
-      arr.forEach((p) => {
-        if (!isFinite(p.x) || !isFinite(p.y)) return;
-        if (!started) { ctx.moveTo(p.x, p.y); started = true; }
-        else ctx.lineTo(p.x, p.y);
-      });
-      ctx.stroke();
-      const first = arr.find(p => isFinite(p.x) && isFinite(p.y));
-      if (first) {
-        ctx.globalAlpha = .95;
-        ctx.fillStyle = color;
-        roundRect(ctx, first.x + 8, Math.max(18, first.y - 28), 74, 24, 12);
-        ctx.fill();
-        ctx.fillStyle = '#07111f';
-        ctx.font = 'bold 11px ui-sans-serif, system-ui, sans-serif';
-        ctx.fillText(label, first.x + 18, Math.max(35, first.y - 12));
-      }
-      ctx.restore();
+      drawVariableTrace(ctx, arr, color, null, null, 1, label);
     }
     function drawComparisonInMainView() {
-      // 多段导入音频与多段录音统一叠加在同一个观察区显示，不再另设对比画布。
+      // 多段导入音频与多段录音统一叠加在同一个观察区显示，并保留音乐元素映射。
       audioSegments.forEach((seg, i) => {
-        if (seg.trace && seg.trace.length > 1) drawSavedTraceOnMain(seg.trace, segmentColor(i), seg.type === 'recording' ? '录音' + (i+1) : '导入' + (i+1));
+        if (seg.visible === false) return;
+        if (seg.trace && seg.trace.length > 1) drawSavedTraceOnMain(seg.trace, segmentColor(i), seg.name || (seg.type === 'recording' ? '录音' : '导入'));
       });
       // 兼容旧版单条缓存。
       if (!audioSegments.length) {
