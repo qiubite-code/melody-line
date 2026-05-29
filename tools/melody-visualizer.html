@@ -2062,12 +2062,52 @@
 
 
 
-/* === V5.3 对比观测区与音乐元素映射 === */
+/* === V5.4 多段保留与对比修复 === */
 .comparison-panel{display:block!important;margin-top:14px;padding:14px;border-radius:20px;background:linear-gradient(180deg,rgba(9,23,42,.94),rgba(8,18,35,.92));border:1px solid rgba(125,211,252,.15)}
 .comparison-head{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;margin-bottom:10px}.comparison-head h2{margin:0;font-size:22px}.comparison-legend{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.comparison-legend span{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border-radius:999px;border:1px solid rgba(162,191,217,.16);font-size:12px;font-weight:800}.legend-pitch{color:#fca5a5;background:rgba(248,113,113,.10)}.legend-volume{color:#86efac;background:rgba(34,197,94,.10)}.legend-rest{color:#bfdbfe;background:rgba(59,130,246,.10)}.comparison-canvas-wrap{overflow:auto;border:1px solid rgba(162,191,217,.12);border-radius:18px;background:#07111f}.comparison-canvas-wrap canvas{display:block;min-width:960px;height:270px}.comparison-tip{margin:8px 2px 0;color:#9fb4cb;font-size:13px;line-height:1.6}.comparison-mini-legend .legend-element{color:#d1fae5!important;background:rgba(16,185,129,.12)}
 @media(max-width:760px){.comparison-head{align-items:flex-start;flex-direction:column}.comparison-legend{justify-content:flex-start}.comparison-canvas-wrap canvas{min-width:780px}}
 
-</style>
+
+
+/* === V5.4 多段音频/录音独立保留修复 === */
+.segment-row{grid-template-columns:auto auto minmax(180px,1fr) auto!important;}
+.segment-actions button{white-space:nowrap;}
+.segment-type{font-size:12px;color:#9fb4cb;}
+.comparison-panel{display:block!important;}
+.comparison-canvas-wrap canvas{min-width:960px;}
+
+
+
+/* V5.6 多段对比区修复：精简按钮、标签独立显示 */
+.segment-actions button[data-action="analyze"]{display:none!important;}
+.segment-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.segment-row{grid-template-columns:auto auto minmax(160px,1fr) auto!important;}
+.comparison-canvas-wrap canvas{min-width:960px;}
+
+  
+/* ===== V5.7 片段切换、对比区缩放、小节节拍标尺修复 ===== */
+.comparison-panel{display:block!important}
+.comparison-tools{display:flex;align-items:center;justify-content:flex-end;gap:12px;flex-wrap:wrap}
+.comparison-size-control{display:inline-flex;align-items:center;gap:8px;padding:7px 10px;border-radius:999px;border:1px solid rgba(162,191,217,.14);background:rgba(20,42,68,.75);color:#dcecff;font-size:12px;font-weight:800;white-space:nowrap}
+.comparison-size-control input{width:150px;accent-color:#67e8f9}
+.comparison-size-control b{min-width:44px;text-align:right;color:#fff}
+.comparison-canvas-wrap{resize:vertical;min-height:280px;max-height:760px;overflow:auto!important}
+.segment-row.is-active{border-color:rgba(125,211,252,.55)!important;box-shadow:0 0 0 1px rgba(125,211,252,.18),0 0 22px rgba(14,165,233,.12)}
+.segment-index-badge{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:999px;background:rgba(125,211,252,.18);border:1px solid rgba(125,211,252,.28);font-size:12px;margin-right:6px;color:#e0f7ff}
+.segment-name .segment-color{vertical-align:middle;margin-right:6px}
+@media(max-width:900px){.comparison-head{align-items:flex-start!important;flex-direction:column!important}.comparison-tools{justify-content:flex-start}.comparison-size-control input{width:110px}}
+
+
+
+/* V5.8：对比区横轴/纵轴独立缩放与标签不遮挡 */
+.comparison-tools{align-items:center;flex-wrap:wrap!important;}
+.comparison-size-control{white-space:nowrap;}
+.comparison-canvas-wrap{overflow:auto!important;max-width:100%;border-radius:18px;}
+.comparison-canvas-wrap canvas{display:block;min-width:100%;}
+
+
+.segment-actions button[data-action="rename"]{background:rgba(24,58,88,.88)!important;color:#dff6ff!important}
+  </style>
 <!-- V4.4: restored from V4.2 visualizer with detailed operation manual retained. -->
 </head>
 <body>
@@ -2283,7 +2323,7 @@
         <div class="multi-audio-actions">
           <button id="playAllSegments" class="ghost">▶ 同时播放已选</button>
           <button id="stopAllSegments" class="ghost">■ 停止全部</button>
-          <button id="analyzeAllSegments" class="ghost">⌁ 分析全部旋律线</button>
+          <button id="analyzeAllSegments" class="ghost">⌁ 补全旋律线</button>
           <button id="clearSegments" class="ghost">⌫ 清空片段</button>
         </div>
       </div>
@@ -2296,14 +2336,24 @@
           <p class="eyebrow">对比观测区</p>
           <h2>多段旋律线同屏对比</h2>
         </div>
-        <div class="comparison-legend">
-          <span class="legend-pitch">音高：低音冷色 / 高音暖色</span>
-          <span class="legend-volume">力度：音量越大线条越粗</span>
-          <span class="legend-rest">休止：断线留白</span>
+        <div class="comparison-tools">
+          <div class="comparison-legend">
+            <span class="legend-pitch">音高：低音冷色 / 高音暖色</span>
+            <span class="legend-volume">力度：音量越大线条越粗</span>
+            <span class="legend-rest">休止：断线留白</span>
+          </div>
+          <label class="comparison-size-control">横轴缩放
+            <input id="comparisonWidth" type="range" min="100" max="240" value="100" step="10">
+            <b id="comparisonWidthValue">100%</b>
+          </label>
+          <label class="comparison-size-control">纵轴高度
+            <input id="comparisonHeight" type="range" min="280" max="820" value="430" step="10">
+            <b id="comparisonHeightValue">430px</b>
+          </label>
         </div>
       </div>
       <div class="comparison-canvas-wrap"><canvas id="comparisonCanvas"></canvas></div>
-      <p class="comparison-tip">勾选“显示”的导入音频或录音都会叠加在此处；可单独播放或选择多段同时播放，用于范唱、学生演唱与多次练习对比。</p>
+      <p class="comparison-tip">勾选“显示”的导入音频或录音都会叠加在此处；左侧标签栏独立显示，不会遮挡旋律线。</p>
     </section>
 
     <section id="notationPanel" class="notation-panel panel" aria-label="旋律转谱结果">
@@ -2527,6 +2577,10 @@
     const hideNoteNamesToggle = $('hideNoteNamesToggle');
     const comparisonCanvas = $('comparisonCanvas');
     const comparisonCtx = comparisonCanvas ? comparisonCanvas.getContext('2d') : null;
+    const comparisonHeightInput = $('comparisonHeight');
+    const comparisonHeightValue = $('comparisonHeightValue');
+    const comparisonWidthInput = $('comparisonWidth');
+    const comparisonWidthValue = $('comparisonWidthValue');
     const segmentList = $('segmentList');
     const playAllSegmentsBtn = $('playAllSegments');
     const stopAllSegmentsBtn = $('stopAllSegments');
@@ -2630,6 +2684,7 @@
     let recordingPauseStartedAt = 0;
 
     let points = [];
+    let activeRecordingTrace = []; // 当前一次录音的独立旋律线缓存，避免第一段/后续片段被覆盖
     let importedTracePoints = [];
     let recordedTracePoints = [];
     let audioSegments = [];
@@ -2696,35 +2751,172 @@
     function segmentColor(i){ return SEGMENT_COLORS[i % SEGMENT_COLORS.length]; }
     function segmentColorById(id){ const idx = audioSegments.findIndex(s => s.id === id); return segmentColor(Math.max(0, idx)); }
     function makeSegmentId(){ return 'seg_' + Date.now() + '_' + Math.random().toString(36).slice(2,7); }
+    function normalizeSegmentTrace(trace, segId) {
+      // 统一保存每一段音频/录音的旋律线数据，避免后续录音或上传把已有片段覆盖。
+      // 同时补齐音乐元素映射：音高=颜色、力度=线宽、休止/换气=断线。
+      if (!Array.isArray(trace)) return [];
+      const displayRange = getDisplayPitchRange ? getDisplayPitchRange() : { minFreq: 45, maxFreq: 2600 };
+      const pxPerSec = Number(controls && controls.speed ? controls.speed.value : 95) || 95;
+      const fallback = segId ? segmentColorById(segId) : 'rgba(125,211,252,.92)';
+      let prevT = null;
+      return trace.map((p, idx) => {
+        const t = Number.isFinite(p.t) ? p.t : (Number.isFinite(p.x) ? Math.max(0, (p.x - 48) / pxPerSec) : idx * 0.075);
+        const displayPitch = Number.isFinite(p.displayPitch) ? p.displayPitch : (Number.isFinite(p.pitch) ? p.pitch : null);
+        const y = Number.isFinite(p.y) ? p.y : (displayPitch ? freqToY(displayPitch, displayRange.minFreq, displayRange.maxFreq) : NaN);
+        const x = Number.isFinite(p.x) ? p.x : 48 + t * pxPerSec;
+        const rms = Number.isFinite(p.rms) ? p.rms : 0.03;
+        const ampNorm = clamp(rms / 0.16, 0, 1);
+        const color = p.color || (displayPitch ? pitchToColor(displayPitch, displayRange.minFreq, displayRange.maxFreq) : fallback);
+        const breakBefore = !!p.breakBefore || (prevT !== null && t - prevT > 0.18);
+        prevT = t;
+        return {
+          t, x, y,
+          pitch: Number.isFinite(p.pitch) ? p.pitch : displayPitch,
+          displayPitch,
+          rms,
+          width: Number.isFinite(p.width) ? p.width : 1.4 + ampNorm * 6.5,
+          alpha: Number.isFinite(p.alpha) ? p.alpha : 0.32 + ampNorm * 0.62,
+          color,
+          note: p.note || (displayPitch ? freqToNote(displayPitch).nameWithOctave : ''),
+          breakBefore
+        };
+      }).filter(p => Number.isFinite(p.t) && Number.isFinite(p.x) && Number.isFinite(p.y));
+    }
     function addAudioSegment({name, type, url, trace=[], file=null, duration=0}) {
       const id = makeSegmentId();
+      const normalizedTrace = normalizeSegmentTrace(trace, id);
       audioSegments.push({
         id,
         name: name || '音频片段',
         type: type || 'file',
         url,
         file: file || null,
-        duration: duration || 0,
-        trace: Array.isArray(trace) ? trace.slice() : [],
+        duration: duration || (normalizedTrace.length ? Math.max(...normalizedTrace.map(p => p.t || 0)) : 0),
+        trace: normalizedTrace,
         visible: true,
         selected: true,
         analyzing: false,
         playing: false
       });
       currentSegmentId = id;
+      growCanvasForAllSegments();
       renderSegmentList();
       updateMultiLegend();
+      draw();
       return id;
+    }
+    function growCanvasForAllSegments() {
+      const pxPerSec = Number(controls && controls.speed ? controls.speed.value : 95) || 95;
+      let maxT = 0;
+      audioSegments.forEach(seg => {
+        if (seg.duration) maxT = Math.max(maxT, seg.duration);
+        if (seg.trace && seg.trace.length) maxT = Math.max(maxT, ...seg.trace.map(p => p.t || 0));
+      });
+      if (maxT > 0) growCanvasIfNeeded(48 + maxT * pxPerSec + 320);
     }
     function updateCurrentSegmentTrace() {
       if (!currentSegmentId || !points || !points.length) return;
+      // V5.8 修复：播放/查看已保存片段时，只允许读取片段旋律线，不能把当前主观察区内容反写覆盖到片段。
+      // 否则在播放第二段后再点第一段，第一段的 trace 可能被上一段覆盖，导致主观察区不切换。
+      if (playbackCursorOnly && typeof isAudioPlaybackMode === 'function' && isAudioPlaybackMode()) return;
+      if (points[0] && points[0].segmentId && points[0].segmentId !== currentSegmentId) return;
       const seg = audioSegments.find(s => s.id === currentSegmentId);
       if (!seg) return;
-      seg.trace = points.map(p => ({t:p.t, x:p.x, y:p.y, pitch:p.pitch, displayPitch:p.displayPitch || p.pitch, rms:p.rms, width:p.width||2, alpha:p.alpha||.72, color:p.color||segmentColorById(seg.id), note:p.note, breakBefore:!!p.breakBefore}));
-      seg.duration = Math.max(seg.duration || 0, ...seg.trace.map(p => p.t || 0));
+      seg.trace = normalizeSegmentTrace(points.map(p => ({t:p.t, x:p.x, y:p.y, pitch:p.pitch, displayPitch:p.displayPitch || p.pitch, rms:p.rms, width:p.width||2, alpha:p.alpha||.72, color:p.color||segmentColorById(seg.id), note:p.note, breakBefore:!!p.breakBefore})), seg.id);
+      seg.duration = Math.max(seg.duration || 0, ...(seg.trace.length ? seg.trace.map(p => p.t || 0) : [0]));
+      growCanvasForAllSegments();
       renderSegmentList(false);
       updateMultiLegend();
+      draw();
     }
+
+    function cloneTraceForMainView(trace, seg) {
+      const range = getDisplayPitchRange ? getDisplayPitchRange() : {minFreq: 45, maxFreq: 2600};
+      return (trace || []).map(p => {
+        const t = Number(p.t) || 0;
+        const displayPitch = Number(p.displayPitch || p.pitch) || 0;
+        const x = isFinite(p.x) ? p.x : cursorXFromTime(t);
+        const y = isFinite(p.y) ? p.y : (displayPitch > 0 ? freqToY(displayPitch, range.minFreq, range.maxFreq) : canvasHeight / 2);
+        const rms = Number(p.rms) || 0;
+        return {
+          t, x, y,
+          pitch: Number(p.pitch) || displayPitch,
+          displayPitch: displayPitch || Number(p.pitch) || 0,
+          rms,
+          width: Number(p.width) || tracePointWidth(p),
+          alpha: Number(p.alpha) || tracePointAlpha(p),
+          color: p.color || pitchToColor(displayPitch || Number(p.pitch) || range.minFreq, range.minFreq, range.maxFreq),
+          note: p.note || (displayPitch ? freqToNote(displayPitch) : null),
+          breakBefore: !!p.breakBefore,
+          segmentId: seg && seg.id,
+          segmentName: seg && seg.name
+        };
+      });
+    }
+
+    function setPrimaryTraceFromSegment(seg, { scroll = true, resetTime = false } = {}) {
+      if (!seg) return false;
+      currentSegmentId = seg.id;
+      if (!(seg.trace && seg.trace.length)) return false;
+      if (resetTime && audioEl && audioEl.dataset && audioEl.dataset.segmentId !== seg.id) {
+        try { audioEl.currentTime = 0; } catch(e) {}
+      }
+      points = cloneTraceForMainView(seg.trace, seg);
+      phraseMarkers = [];
+      restMarkers = [];
+      phraseIndex = 1;
+      playbackCursorOnly = true;
+      if (audioEl && audioEl.dataset) audioEl.dataset.hasMelodyTrace = 'true';
+      growCanvasForAllSegments();
+      if (points.length) {
+        const first = points.find(p => p && p.pitch);
+        if (first) {
+          readout.pitch.textContent = Math.round(first.pitch) + ' Hz';
+          const n = (first.note && typeof first.note === 'object') ? first.note : freqToNote(first.pitch || first.displayPitch);
+          if (n) readout.note.textContent = n.name + ' / ' + n.solfege + '（' + formatCents(n.cents) + '）';
+        }
+        readout.phrase.textContent = '当前片段：' + (seg.name || '');
+      }
+      if (audioEl && audioEl.dataset) {
+        audioEl.dataset.segmentId = seg.id;
+        audioEl.dataset.url = seg.url || audioEl.dataset.url || '';
+        audioEl.dataset.hasMelodyTrace = 'true';
+        audioEl.dataset.sourceMode = seg.type === 'recording' ? 'recording' : 'file';
+      }
+      renderSegmentList(false);
+      if (scroll && scroller) scroller.scrollLeft = 0;
+      draw();
+      return true;
+    }
+
+    function setMainViewToLiveOrEmpty() {
+      points = [];
+      phraseMarkers = [];
+      restMarkers = [];
+      phraseIndex = 1;
+      previousPitch = null;
+      previousPoint = null;
+      pitchHistory = [];
+      pendingPitch = null;
+      pendingPitchCount = 0;
+      visualPitchState = null;
+      draw();
+    }
+
+    function syncPrimaryTraceToAudioSegment({ scroll = false } = {}) {
+      if (!audioEl || !audioEl.dataset) return false;
+      const id = audioEl.dataset.segmentId || currentSegmentId;
+      if (!id) return false;
+      const seg = audioSegments.find(s => s.id === id);
+      if (!seg || !(seg.trace && seg.trace.length)) return false;
+      if (currentSegmentId !== id || !points.length || points[0].segmentId !== id) {
+        return setPrimaryTraceFromSegment(seg, { scroll });
+      }
+      playbackCursorOnly = true;
+      if (audioEl.dataset) audioEl.dataset.hasMelodyTrace = 'true';
+      return true;
+    }
+
     function updateMultiLegend(){
       const legend = document.getElementById('multiLegend');
       if (!legend) return;
@@ -2745,17 +2937,18 @@
       segmentList.innerHTML = audioSegments.map((s,i)=>{
         const state = s.analyzing ? '分析中…' : (s.trace && s.trace.length ? (s.trace.length + ' 点') : '未分析');
         const dur = s.duration ? ' · ' + formatAudioClock(s.duration) : '';
-        const rowCls = [s.playing ? 'is-playing' : '', s.visible === false ? 'is-hidden' : '', s.analyzing ? 'is-analyzing' : ''].filter(Boolean).join(' ');
+        const rowCls = [s.id === currentSegmentId ? 'is-active' : '', s.playing ? 'is-playing' : '', s.visible === false ? 'is-hidden' : '', s.analyzing ? 'is-analyzing' : ''].filter(Boolean).join(' ');
         return `<div class="segment-row ${rowCls}" data-id="${s.id}">
           <input class="segment-check" type="checkbox" data-action="select" ${s.selected !== false ? 'checked' : ''} title="加入同时播放">
           <input class="segment-visible" type="checkbox" data-action="visible" ${s.visible !== false ? 'checked' : ''} title="显示/隐藏旋律线">
           <div class="segment-meta">
-            <span class="segment-name" title="${escapeHtml(s.name)}"><span class="segment-color" style="display:inline-block;background:${segmentColor(i)}"></span> ${escapeHtml(s.name)}</span>
+            <span class="segment-name" title="${escapeHtml(s.name)}"><span class="segment-index-badge">${i+1}</span><span class="segment-color" style="display:inline-block;background:${segmentColor(i)}"></span>${s.type==='recording'?'录音':'导入'} ${i+1}｜${escapeHtml(s.name.replace(/^录音\s*/,'').replace(/^音频\s*/,''))}</span>
             <span class="segment-type">${s.type==='recording'?'录音':'导入'}${dur} · ${state}</span>
           </div>
           <div class="segment-actions">
             <button type="button" data-action="play">${s.playing ? 'Ⅱ 暂停' : '▶ 单独播放'}</button>
-            <button type="button" data-action="analyze">⌁ 生成旋律线</button>
+            <button type="button" data-action="show">◎ 查看旋律</button>
+            <button type="button" data-action="rename">重命名</button>
             <button type="button" data-action="remove">删除</button>
             <span class="segment-state">${s.visible === false ? '已隐藏' : '同屏显示'}</span>
           </div>
@@ -2776,25 +2969,52 @@
       draw();
     }
     async function playSegment(id){
-      const seg=audioSegments.find(s=>s.id===id); if(!seg||!seg.url) return;
+      const seg = audioSegments.find(s => s.id === id);
+      if (!seg || !seg.url) return;
+
+      // 正在播放同一段时，再次点击即暂停；旋律线仍保留在主观察区。
       if (currentSegmentId === id && audioEl && !audioEl.paused) {
         audioEl.pause();
         seg.playing = false;
         renderSegmentList(false);
+        draw();
         return;
       }
+
       stopSegmentPlayers();
       stopFilePlayback();
       currentSegmentId = seg.id;
-      audioEl.dataset.sourceMode = seg.type==='recording'?'recording':'file';
-      audioEl.dataset.url = seg.url;
-      audioEl.dataset.hasMelodyTrace = seg.trace && seg.trace.length ? 'true' : 'false';
-      playbackCursorOnly = !!(seg.trace && seg.trace.length);
-      audioEl.src = seg.url;
-      audioEl.load();
       mode = seg.type === 'recording' ? 'recording' : 'file';
+
+      // V5.8：先绑定音频源与片段 ID，再切换旋律线，确保第 1 段、第 2 段来回播放时主观察区一定对应当前片段。
+      const hasTrace = !!(seg.trace && seg.trace.length);
+      audioEl.dataset.sourceMode = seg.type === 'recording' ? 'recording' : 'file';
+      audioEl.dataset.url = seg.url;
+      audioEl.dataset.segmentId = seg.id;
+      audioEl.dataset.hasMelodyTrace = hasTrace ? 'true' : 'false';
+      playbackCursorOnly = hasTrace;
+      audioEl.src = seg.url;
+      try { audioEl.currentTime = 0; } catch(e) {}
+      if (hasTrace) {
+        setPrimaryTraceFromSegment(seg, { scroll: true, resetTime: true });
+      } else {
+        setMainViewToLiveOrEmpty();
+        playbackCursorOnly = false;
+        resetAnalysisState();
+      }
+      audioEl.load();
+      if (hasTrace) setPrimaryTraceFromSegment(seg, { scroll: true, resetTime: false });
       setSegmentPlaying(id, true);
-      try { await audioEl.play(); } catch(e) { console.warn(e); setStatus('<span class="pill">播放提示</span>浏览器阻止自动播放，请再点击一次播放按钮。'); }
+      setStatus('<span class="pill">片段播放</span>正在播放“' + escapeHtml(seg.name) + '”。主观察区显示该片段旋律线；对比观测区保留所有勾选片段。');
+      syncPrimaryTraceToAudioSegment({ scroll: true });
+      try {
+        await audioEl.play();
+        if (hasTrace) setPrimaryTraceFromSegment(seg, { scroll: false, resetTime: false });
+        syncPrimaryTraceToAudioSegment({ scroll: false });
+      } catch(e) {
+        console.warn(e);
+        setStatus('<span class="pill">播放提示</span>浏览器阻止自动播放，请再点击一次播放按钮。');
+      }
       updateStagePlaybackUI();
       draw();
     }
@@ -2822,7 +3042,7 @@
         const a=new Audio(seg.url);
         a.currentTime=0;
         a.dataset.segmentId=seg.id;
-        a.addEventListener('ended',()=>{ seg.playing=false; renderSegmentList(false); });
+        a.addEventListener('ended',()=>{ seg.playing=false; if(segmentPlayers.every(x=>x.paused || x.ended)){ if(playAllSegmentsBtn) playAllSegmentsBtn.textContent='▶ 同时播放已选'; audioSegments.forEach(s=>{s._multiPlaying=false; s.playing=false;}); } renderSegmentList(false); draw(); });
         segmentPlayers.push(a);
         seg._multiPlaying = true;
         seg.playing = true;
@@ -2853,9 +3073,11 @@
       setStatus('<span class="pill">旋律分析</span>正在分析“' + escapeHtml(seg.name) + '”的旋律线。');
       try {
         const trace = await analyzeAudioSegmentToTrace(seg);
-        seg.trace = trace;
-        seg.duration = Math.max(seg.duration || 0, trace.length ? Math.max(...trace.map(p=>p.t||0)) : 0);
+        seg.trace = normalizeSegmentTrace(trace, seg.id);
+        seg.duration = Math.max(seg.duration || 0, seg.trace.length ? Math.max(...seg.trace.map(p=>p.t||0)) : 0);
         seg.visible = true;
+        growCanvasForAllSegments();
+        if (currentSegmentId === seg.id || !points.length) setPrimaryTraceFromSegment(seg, { scroll: false });
         setStatus('<span class="pill">分析完成</span>“' + escapeHtml(seg.name) + '”已生成旋律线，可同屏对比或播放。');
       } catch (err) {
         console.warn(err);
@@ -2868,8 +3090,17 @@
     }
     async function analyzeAllSegments(){
       const pending = audioSegments.filter(s => !(s.trace && s.trace.length));
-      for (const seg of pending) await analyzeSegmentById(seg.id);
-      if (!pending.length) setStatus('<span class="pill">无需分析</span>所有片段都已有旋律线。');
+      if (!pending.length) {
+        setStatus('<span class="pill">无需分析</span>所有片段都已有旋律线。');
+        return;
+      }
+      if (analyzeAllSegmentsBtn) analyzeAllSegmentsBtn.textContent = '分析中…';
+      try {
+        for (const seg of pending) await analyzeSegmentById(seg.id);
+        setStatus('<span class="pill">分析完成</span>已补全所选片段的旋律线，可在对比观测区同屏查看。');
+      } finally {
+        if (analyzeAllSegmentsBtn) analyzeAllSegmentsBtn.textContent = '⌁ 补全旋律线';
+      }
     }
     async function analyzeAudioSegmentToTrace(seg){
       await ensureAudioContext();
@@ -2933,7 +3164,25 @@
       const seg = audioSegments.find(s=>s.id===id);
       if (!seg) return;
       if(action==='play') playSegment(id);
+      if(action==='show') {
+        if (seg.trace && seg.trace.length) {
+          setPrimaryTraceFromSegment(seg, { scroll: true });
+          setStatus('<span class="pill">已切换旋律线</span>主观察区已显示“' + escapeHtml(seg.name) + '”对应的旋律线。');
+        } else {
+          analyzeSegmentById(id);
+        }
+      }
       if(action==='analyze') analyzeSegmentById(id);
+      if(action==='rename') {
+        const name = prompt('请输入新的片段名称', seg.name || '');
+        if (name !== null && name.trim()) {
+          seg.name = name.trim();
+          renderSegmentList(false);
+          updateMultiLegend();
+          draw();
+          setStatus('<span class="pill">已重命名</span>片段名称已更新。');
+        }
+      }
       if(action==='remove') removeSegment(id);
       if(action==='visible') { seg.visible = e.target.checked; renderSegmentList(false); draw(); }
       if(action==='select') { seg.selected = e.target.checked; renderSegmentList(false); }
@@ -3201,6 +3450,20 @@
       draw();
     }
 
+    
+    if (comparisonHeightInput) {
+      comparisonHeightInput.addEventListener('input', () => {
+        if (comparisonHeightValue) comparisonHeightValue.textContent = comparisonHeightInput.value + 'px';
+        drawComparisonPanel();
+      });
+    }
+    if (comparisonWidthInput) {
+      comparisonWidthInput.addEventListener('input', () => {
+        if (comparisonWidthValue) comparisonWidthValue.textContent = comparisonWidthInput.value + '%';
+        drawComparisonPanel();
+      });
+    }
+
     window.addEventListener('resize', () => {
       dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
       ensureCanvasSize();
@@ -3382,12 +3645,21 @@
           }
           const type = chunks[0].type || 'audio/webm';
           const blob = new Blob(chunks, { type });
-          if (recordedBlobUrl) URL.revokeObjectURL(recordedBlobUrl);
+          // 每次录音都生成独立 blob URL，不能撤销上一段录音，否则上一段会无法播放、旋律线也无法作为对比保留。
           recordedBlobUrl = URL.createObjectURL(blob);
-          const recTraceForSegment = (points && points.length) ? points.map(p => ({t:p.t, x:p.x, y:p.y, pitch:p.pitch, rms:p.rms})) : [];
-          addAudioSegment({name:'录音 ' + new Date().toLocaleTimeString(), type:'recording', url:recordedBlobUrl, trace:recTraceForSegment});
-          const oldUrl = audioEl.dataset.url;
-          if (oldUrl && oldUrl !== recordedBlobUrl) URL.revokeObjectURL(oldUrl);
+          const traceSourceForRecording = (activeRecordingTrace && activeRecordingTrace.length) ? activeRecordingTrace : (points || []);
+          const recTraceForSegment = (traceSourceForRecording && traceSourceForRecording.length) ? traceSourceForRecording.map(p => ({
+            t:p.t, x:p.x, y:p.y, pitch:p.pitch, displayPitch:p.displayPitch || p.pitch, rms:p.rms,
+            width:p.width || 2, alpha:p.alpha || .72, color:p.color || pitchToColor(p.displayPitch || p.pitch, getDisplayPitchRange().minFreq, getDisplayPitchRange().maxFreq),
+            note:p.note, breakBefore:!!p.breakBefore
+          })) : [];
+          const newSegId = addAudioSegment({name:'录音 ' + new Date().toLocaleTimeString(), type:'recording', url:recordedBlobUrl, trace:recTraceForSegment, duration: recTraceForSegment.length ? Math.max(...recTraceForSegment.map(p => p.t || 0)) : 0});
+          currentSegmentId = newSegId;
+          const justRecordedSegment = audioSegments.find(s => s.id === newSegId);
+          if (justRecordedSegment && justRecordedSegment.trace && justRecordedSegment.trace.length) {
+            setPrimaryTraceFromSegment(justRecordedSegment, { scroll: true, resetTime: false });
+          }
+          // 不再撤销旧 audio URL；旧 URL 可能属于列表中的导入音频或历史录音，需要继续播放对比。
           audioEl.dataset.url = recordedBlobUrl;
           audioEl.dataset.sourceMode = 'recording';
           audioEl.dataset.hasMelodyTrace = points.length ? 'true' : 'false';
@@ -3591,6 +3863,7 @@
         micSource.connect(analyser);
         mode = 'mic';
         recordedTracePoints = [];
+        activeRecordingTrace = [];
         drawComparisonPanel();
         running = false;
         totalPausedDuration = 0;
@@ -3705,7 +3978,8 @@
     async function handleFile(file, { makePrimary = true } = {}) {
       if (!file) return;
       await ensureAudioContext();
-      stopMic({ discardRecording: true });
+      // 仅在真正录音中才提示性停止；已保存的历史片段不受影响。
+      if (recordingStatus === 'recording' || recordingStatus === 'paused' || recordingStatus === 'countIn') stopMic({ discardRecording: true });
       disconnectCurrentSources();
       const url = URL.createObjectURL(file);
       const id = addAudioSegment({name:file.name, type:'file', url, trace:[], file});
@@ -3738,6 +4012,7 @@
 
     audioEl.addEventListener('loadedmetadata', () => {
       mountSingleAudioPlayer();
+      syncPrimaryTraceToAudioSegment({ scroll: false });
       updateStagePlaybackUI();
       draw();
     });
@@ -3750,6 +4025,7 @@
         mountSingleAudioPlayer();
         await ensureAudioContext();
         activateAudioPlaybackMode();
+        syncPrimaryTraceToAudioSegment({ scroll: false });
         prepareAudioElementPlayback();
         running = true;
         lastFrameWallTime = 0;
@@ -3783,6 +4059,7 @@
 
     audioEl.addEventListener('seeking', () => {
       activateAudioPlaybackMode();
+      syncPrimaryTraceToAudioSegment({ scroll: false });
       playbackCursorOnly = hasSavedMelodyTrace();
       draw();
       scrollCursorIntoView(audioEl.currentTime || 0);
@@ -3809,6 +4086,7 @@
     audioEl.addEventListener('timeupdate', () => {
       syncStageAudioElement({ hard: false });
       updateStagePlaybackUI();
+      syncPrimaryTraceToAudioSegment({ scroll: false });
       if (isAudioPlaybackMode()) {
         draw();
         scrollCursorIntoView(audioEl.currentTime || 0);
@@ -3820,10 +4098,15 @@
       if (rafId) cancelAnimationFrame(rafId);
       rafId = null;
       if (points.length) setMelodyTraceSaved(true);
+      if (currentSegmentId) {
+        const seg = audioSegments.find(s => s.id === currentSegmentId);
+        if (seg) seg.playing = false;
+        renderSegmentList(false);
+      }
       updateStagePlaybackUI();
       syncStageAudioElement({ hard: true });
       draw();
-      setStatus('<span class="pill">播放结束</span>完整旋律线已保留。重新播放或拖动进度时，黄色光标会在原有线条上跟随移动。');
+      setStatus('<span class="pill">播放结束</span>当前片段旋律线已保留；可切换其他片段，或在对比观测区查看多段叠加。');
     });
 
     function loop(now = performance.now()) {
@@ -3960,6 +4243,11 @@
       const color = pitchToColor(displayPitch, minFreq, maxFreq);
       const p = { t, x, y, pitch, displayPitch, rms, width, alpha, color, note, breakBefore };
       points.push(p);
+      if (mode === 'mic' && (recordingStatus === 'recording' || recordingStatus === 'paused')) {
+        // 独立保存当前录音轨迹；结束录音时优先使用它，防止主观察区切换导致第一段录音丢线。
+        activeRecordingTrace.push({ t:p.t, x:p.x, y:p.y, pitch:p.pitch, displayPitch:p.displayPitch, rms:p.rms, width:p.width, alpha:p.alpha, color:p.color, note:p.note, breakBefore:!!p.breakBefore });
+        if (activeRecordingTrace.length > 12000) activeRecordingTrace.splice(0, activeRecordingTrace.length - 12000);
+      }
       if (points.length > 12000) points.splice(0, points.length - 12000);
       snapshotCurrentTrace();
       previousPoint = p;
@@ -4652,39 +4940,144 @@
       const traces = [];
       audioSegments.forEach((seg, i) => {
         if (seg.visible === false) return;
-        if (seg.trace && seg.trace.length > 1) traces.push({trace: seg.trace, color: segmentColor(i), label: seg.name || (seg.type === 'recording' ? '录音' : '导入')});
+        if (seg.trace && seg.trace.length > 1) {
+          traces.push({
+            trace: seg.trace,
+            color: segmentColor(i),
+            label: seg.name || (seg.type === 'recording' ? '录音' : '导入'),
+            type: seg.type || 'file',
+            duration: seg.duration || (seg.trace.length ? Math.max(...seg.trace.map(p => p.t || 0)) : 0),
+            id: seg.id
+          });
+        }
       });
+      // 录音过程中也能在对比区看到当前尚未结束的旋律线。
+      if (mode === 'mic' && points && points.length > 1) {
+        traces.push({trace: normalizeSegmentTrace(points, 'live'), color:'rgba(250,204,21,.92)', label:'当前录音', type:'recording', duration: points.length ? Math.max(...points.map(p=>p.t||0)) : 0, id:'live'});
+      }
       if (!traces.length) {
-        if (importedTracePoints.length > 1) traces.push({trace: importedTracePoints, color:'rgba(125,211,252,.92)', label:'导入音频'});
-        if (recordedTracePoints.length > 1) traces.push({trace: recordedTracePoints, color:'rgba(250,204,21,.92)', label:'录音'});
+        if (importedTracePoints.length > 1) traces.push({trace: importedTracePoints, color:'rgba(125,211,252,.92)', label:'导入音频', type:'file', duration: importedTracePoints.length ? Math.max(...importedTracePoints.map(p=>p.t||0)) : 0});
+        if (recordedTracePoints.length > 1) traces.push({trace: recordedTracePoints, color:'rgba(250,204,21,.92)', label:'录音', type:'recording', duration: recordedTracePoints.length ? Math.max(...recordedTracePoints.map(p=>p.t||0)) : 0});
       }
       return traces;
     }
     function drawComparisonPanel() {
       if (!comparisonCanvas || !comparisonCtx) return;
       const wrap = comparisonCanvas.parentElement;
-      const rectW = Math.max(960, wrap ? wrap.clientWidth : 960);
-      const h = 270;
-      const ratio = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
-      comparisonCanvas.style.width = rectW + 'px'; comparisonCanvas.style.height = h + 'px'; comparisonCanvas.width = Math.floor(rectW * ratio); comparisonCanvas.height = Math.floor(h * ratio);
-      const c = comparisonCtx; c.setTransform(ratio, 0, 0, ratio, 0, 0); c.clearRect(0,0,rectW,h);
-      const grd = c.createLinearGradient(0,0,0,h); grd.addColorStop(0,'rgba(8,20,38,.98)'); grd.addColorStop(1,'rgba(4,12,24,.98)'); c.fillStyle = grd; c.fillRect(0,0,rectW,h);
-      c.strokeStyle = 'rgba(162,191,217,.10)'; c.lineWidth = 1;
-      for(let x=0;x<rectW;x+=80){c.beginPath();c.moveTo(x,0);c.lineTo(x,h);c.stroke();}
-      for(let y=0;y<h;y+=45){c.beginPath();c.moveTo(0,y);c.lineTo(rectW,y);c.stroke();}
+      const baseW = Math.max(960, wrap ? wrap.clientWidth : 960);
+      const widthPercent = comparisonWidthInput ? clamp(Number(comparisonWidthInput.value || 100), 100, 240) : 100;
+      const rectW = Math.max(960, Math.round(baseW * widthPercent / 100));
+      if (comparisonWidthValue) comparisonWidthValue.textContent = Math.round(widthPercent) + '%';
       const traces = getVisibleTracesForComparison();
-      if (!traces.length) { c.fillStyle = 'rgba(226,238,249,.72)'; c.font = '15px ui-sans-serif, system-ui, sans-serif'; c.fillText('暂无对比数据：上传多段音频或完成多次录音后，可在这里同时查看各段旋律线。', 26, 44); return; }
-      let maxT = 1;
-      traces.forEach(item => item.trace.forEach(p => { if (isFinite(p.t)) maxT = Math.max(maxT, p.t); }));
-      const padX = 28, padY = 22;
-      traces.forEach(item => {
-        drawVariableTrace(c, item.trace, item.color, p => padX + ((p.t || 0) / maxT) * (rectW - padX * 2), p => padY + (p.y / Math.max(1, canvasHeight)) * (h - padY * 2), .64, item.label);
+      const inputH = comparisonHeightInput ? Number(comparisonHeightInput.value || 430) : 430;
+      const labelRows = Math.max(0, traces.length);
+      const h = Math.max(280, Math.min(820, inputH || 430, Math.max(inputH || 430, 280 + Math.ceil(labelRows / 8) * 22)));
+      if (comparisonHeightValue) comparisonHeightValue.textContent = Math.round(h) + 'px';
+      const ratio = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+      comparisonCanvas.style.width = rectW + 'px';
+      comparisonCanvas.style.height = h + 'px';
+      comparisonCanvas.width = Math.floor(rectW * ratio);
+      comparisonCanvas.height = Math.floor(h * ratio);
+
+      const c = comparisonCtx;
+      c.setTransform(ratio, 0, 0, ratio, 0, 0);
+      c.clearRect(0,0,rectW,h);
+      const grd = c.createLinearGradient(0,0,0,h);
+      grd.addColorStop(0,'rgba(8,20,38,.98)');
+      grd.addColorStop(1,'rgba(4,12,24,.98)');
+      c.fillStyle = grd;
+      c.fillRect(0,0,rectW,h);
+
+      if (!traces.length) {
+        c.fillStyle = 'rgba(226,238,249,.72)';
+        c.font = '15px ui-sans-serif, system-ui, sans-serif';
+        c.fillText('暂无对比数据：上传多段音频或完成多次录音后，可在这里同时查看各段旋律线。', 26, 44);
+        c.fillText('每段都会独立保留，可显示/隐藏、单独播放或勾选后同时播放。', 26, 70);
+        return;
+      }
+
+      const labelColW = Math.min(265, Math.max(205, Math.floor(rectW * 0.20)));
+      const padX = labelColW + 20;
+      const rightPad = 30;
+      const padY = 34;
+
+      c.save();
+      c.fillStyle = 'rgba(15, 31, 53, .78)';
+      c.fillRect(0, 0, labelColW, h);
+      c.strokeStyle = 'rgba(162,191,217,.18)';
+      c.beginPath();
+      c.moveTo(labelColW + .5, 0);
+      c.lineTo(labelColW + .5, h);
+      c.stroke();
+      c.textBaseline = 'middle';
+      traces.forEach((item, i) => {
+        const rowY = 28 + i * 34;
+        if (rowY > h - 28) return;
+        const color = item.color || segmentColor(i);
+        c.fillStyle = 'rgba(255,255,255,.045)';
+        roundRect(c, 12, rowY - 13, labelColW - 24, 26, 9);
+        c.fill();
+        c.fillStyle = color;
+        roundRect(c, 22, rowY - 5, 32, 6, 3);
+        c.fill();
+        c.fillStyle = 'rgba(226,238,249,.96)';
+        c.font = 'bold 12px ui-sans-serif, system-ui, sans-serif';
+        const label = String(item.label || ('片段 ' + (i+1)));
+        const shortLabel = label.length > 16 ? label.slice(0, 15) + '…' : label;
+        c.fillText((i+1) + '. ' + shortLabel, 64, rowY - 4);
+        c.fillStyle = 'rgba(159,180,203,.92)';
+        c.font = '10px ui-sans-serif, system-ui, sans-serif';
+        const count = item.trace ? item.trace.length : 0;
+        const dur = item.duration ? formatAudioClock(item.duration) : '';
+        c.fillText((item.type === 'recording' ? '录音' : '导入') + (dur ? ' · ' + dur : '') + ' · ' + count + '点', 64, rowY + 9);
       });
+      c.restore();
+
+      let maxT = 1;
+      traces.forEach(item => {
+        if (item.duration) maxT = Math.max(maxT, item.duration);
+        item.trace.forEach(p => { if (isFinite(p.t)) maxT = Math.max(maxT, p.t); });
+      });
+
+      // 时间网格：按当前 BPM / 拍号显示小节与拍，便于比较旋律线所在位置。
+      const sig = getTimeSignature ? getTimeSignature() : {top:4,bottom:4};
+      const tempo = getTempoInfo ? getTempoInfo() : {bpm:92};
+      const beatSec = (60 / tempo.bpm) * (4 / sig.bottom);
+      c.lineWidth = 1;
+      c.textBaseline = 'alphabetic';
+      let beat = 0;
+      for (let t=0; t<=maxT + 0.0001; t += beatSec) {
+        const inMeasure = beat % sig.top;
+        const x = padX + (t / maxT) * (rectW - padX - rightPad);
+        c.strokeStyle = inMeasure === 0 ? 'rgba(251, 191, 36, .30)' : 'rgba(125, 211, 252, .12)';
+        c.setLineDash(inMeasure === 0 ? [] : [3, 7]);
+        c.beginPath(); c.moveTo(x, 0); c.lineTo(x, h); c.stroke();
+        c.fillStyle = inMeasure === 0 ? 'rgba(251, 191, 36, .82)' : 'rgba(159,180,203,.70)';
+        c.font = inMeasure === 0 ? 'bold 10px ui-sans-serif, system-ui, sans-serif' : '10px ui-sans-serif, system-ui, sans-serif';
+        c.fillText(inMeasure === 0 ? ('小节' + (Math.floor(beat / sig.top) + 1)) : String(inMeasure + 1), x + 4, inMeasure === 0 ? 14 : 28);
+        beat += 1;
+      }
+      c.setLineDash([]);
+      c.strokeStyle = 'rgba(162,191,217,.10)';
+      for(let y=46; y<h-28; y+=45){ c.beginPath(); c.moveTo(padX,y); c.lineTo(rectW-rightPad,y); c.stroke(); }
+
+      traces.forEach(item => {
+        drawVariableTrace(
+          c,
+          item.trace,
+          item.color,
+          p => padX + ((p.t || 0) / maxT) * (rectW - padX - rightPad),
+          p => padY + (p.y / Math.max(1, canvasHeight)) * (h - padY * 2),
+          .70,
+          ''
+        );
+      });
+
       c.save();
       c.globalAlpha = .9;
       c.fillStyle = 'rgba(226,238,249,.72)';
       c.font = '12px ui-sans-serif, system-ui, sans-serif';
-      c.fillText('音高色彩：低音偏冷、高音偏暖；力度映射：音量越大线条越粗；休止/换气：断线留白。', 26, h - 16);
+      c.fillText('左侧为片段标记；图中横轴按小节/拍显示，线条颜色随音高变化，线宽随力度变化。', padX, h - 12);
       c.restore();
     }
 
@@ -4693,17 +5086,14 @@
       drawVariableTrace(ctx, arr, color, null, null, 1, label);
     }
     function drawComparisonInMainView() {
-      // 多段导入音频与多段录音统一叠加在同一个观察区显示，并保留音乐元素映射。
-      audioSegments.forEach((seg, i) => {
-        if (seg.visible === false) return;
-        if (seg.trace && seg.trace.length > 1) drawSavedTraceOnMain(seg.trace, segmentColor(i), seg.name || (seg.type === 'recording' ? '录音' : '导入'));
-      });
+      // 主观察区只呈现“当前正在播放/选中的片段”或实时录音线，避免多段线条互相覆盖导致听辨困难。
+      // 多段同屏叠加统一放在下方“对比观测区”。
+      if (audioSegments.length) return;
       // 兼容旧版单条缓存。
-      if (!audioSegments.length) {
-        drawSavedTraceOnMain(importedTracePoints, 'rgba(125,211,252,.92)', '导入音频');
-        drawSavedTraceOnMain(recordedTracePoints, 'rgba(250,204,21,.92)', '录音');
-      }
+      drawSavedTraceOnMain(importedTracePoints, 'rgba(125,211,252,.92)', '导入音频');
+      drawSavedTraceOnMain(recordedTracePoints, 'rgba(250,204,21,.92)', '录音');
     }
+
 
 function draw() {
       ctx.clearRect(0, 0, virtualWidth, canvasHeight);
@@ -4773,17 +5163,28 @@ function draw() {
       let beat = 0;
       for (let x = startX; x < virtualWidth; x += beatSec * pxPerSec) {
         const inMeasure = beat % sig.top;
-        ctx.strokeStyle = inMeasure === 0 ? 'rgba(251, 191, 36, .32)' : 'rgba(125, 211, 252, .12)';
-        ctx.lineWidth = inMeasure === 0 ? 1.5 : 1;
+        const measureNo = Math.floor(beat / sig.top) + 1;
+        ctx.strokeStyle = inMeasure === 0 ? 'rgba(251, 191, 36, .36)' : 'rgba(125, 211, 252, .14)';
+        ctx.lineWidth = inMeasure === 0 ? 1.6 : 1;
         ctx.setLineDash(inMeasure === 0 ? [] : [4, 8]);
         ctx.beginPath();
         ctx.moveTo(x, 0);
         ctx.lineTo(x, canvasHeight);
         ctx.stroke();
+
+        // 横轴标尺：显示小节与每一拍，便于定位旋律线发生的位置。
+        ctx.setLineDash([]);
         if (inMeasure === 0) {
-          ctx.fillStyle = 'rgba(251, 191, 36, .72)';
+          ctx.fillStyle = 'rgba(251, 191, 36, .88)';
+          ctx.font = 'bold 11px ui-sans-serif, system-ui, sans-serif';
+          ctx.fillText('小节 ' + measureNo, x + 5, 14);
+          ctx.fillStyle = 'rgba(226,238,249,.78)';
           ctx.font = 'bold 10px ui-sans-serif, system-ui, sans-serif';
-          ctx.fillText('小节 ' + (Math.floor(beat / sig.top) + 1), x + 5, 14);
+          ctx.fillText('拍 1', x + 5, 30);
+        } else {
+          ctx.fillStyle = 'rgba(159,180,203,.70)';
+          ctx.font = '10px ui-sans-serif, system-ui, sans-serif';
+          ctx.fillText(String(inMeasure + 1), x + 4, 28);
         }
         beat += 1;
       }
@@ -5721,5 +6122,173 @@ function draw() {
     updateRecordingControls();
     resetAnalysisState();
   </script>
+
+
+<style id="v60-melody-segment-robust-fix-style">
+  .segment-row .segment-actions button[data-action="rename"]{background:rgba(20,42,68,.9)}
+  .segment-row.is-active{box-shadow:0 0 0 2px rgba(101,200,215,.55) inset;background:rgba(20,42,68,.86)}
+  .segment-row.is-playing{border-color:rgba(101,200,215,.85)}
+  .segment-meta .segment-name{font-weight:900}
+  .segment-color{width:34px!important;height:6px!important;border-radius:999px;margin-right:8px;vertical-align:middle}
+</style>
+
+
+<script id="v60-melody-segment-robust-fix">
+(function(){
+  function cloneTraceArray(trace){
+    return (trace || []).map(function(p){
+      return {
+        t:Number(p.t)||0,
+        x:Number(p.x), y:Number(p.y),
+        pitch:Number(p.pitch)||Number(p.displayPitch)||0,
+        displayPitch:Number(p.displayPitch)||Number(p.pitch)||0,
+        rms:Number(p.rms)||0,
+        width:Number(p.width)||2,
+        alpha:Number(p.alpha)||.72,
+        color:p.color||'rgba(125,211,252,.92)',
+        note:p.note||null,
+        breakBefore:!!p.breakBefore,
+        segmentId:p.segmentId||null,
+        segmentName:p.segmentName||''
+      };
+    }).filter(function(p){return Number.isFinite(p.t) && Number.isFinite(p.pitch);});
+  }
+  function freezeSegment(seg){
+    if(!seg) return;
+    if(seg.traceSnapshot && seg.traceSnapshot.length) return;
+    var src = (seg.trace && seg.trace.length) ? seg.trace : [];
+    seg.traceSnapshot = cloneTraceArray(src).map(function(p){ p.segmentId = seg.id; p.segmentName = seg.name || ''; return p; });
+    if(!seg.trace || !seg.trace.length) seg.trace = cloneTraceArray(seg.traceSnapshot);
+  }
+  function refreshSegmentFreezeAll(){
+    try{ (audioSegments||[]).forEach(freezeSegment); }catch(e){}
+  }
+
+  if (typeof addAudioSegment === 'function') {
+    var _addAudioSegment = addAudioSegment;
+    addAudioSegment = function(args){
+      args = args || {};
+      if (args.trace && args.trace.length) args.trace = cloneTraceArray(args.trace);
+      var id = _addAudioSegment(args);
+      try{
+        var seg = audioSegments.find(function(s){return s.id===id;});
+        if(seg){
+          if(args.trace && args.trace.length){
+            seg.trace = cloneTraceArray(args.trace).map(function(p){p.segmentId=seg.id;p.segmentName=seg.name||'';return p;});
+          }
+          freezeSegment(seg);
+          seg._createdAt = Date.now();
+        }
+      }catch(e){console.warn('freeze new segment failed', e)}
+      return id;
+    };
+  }
+
+  if (typeof setPrimaryTraceFromSegment === 'function') {
+    var _setPrimaryTraceFromSegment = setPrimaryTraceFromSegment;
+    setPrimaryTraceFromSegment = function(seg, opts){
+      if(!seg) return false;
+      freezeSegment(seg);
+      if(seg.traceSnapshot && seg.traceSnapshot.length){
+        // 用冻结快照恢复主观察区，避免第一段录音被后续 points 覆盖。
+        var old = seg.trace;
+        seg.trace = cloneTraceArray(seg.traceSnapshot).map(function(p){p.segmentId=seg.id;p.segmentName=seg.name||'';return p;});
+        var ok = _setPrimaryTraceFromSegment(seg, opts || {});
+        // 保持 trace 和 traceSnapshot 同步，但不引用同一个数组。
+        seg.trace = cloneTraceArray(seg.traceSnapshot).map(function(p){p.segmentId=seg.id;p.segmentName=seg.name||'';return p;});
+        try{ drawComparisonPanel && drawComparisonPanel(); }catch(e){}
+        return ok;
+      }
+      return _setPrimaryTraceFromSegment(seg, opts || {});
+    };
+  }
+
+  // 彻底阻止播放/查看已保存片段时把主观察区写回片段，避免第一段被覆盖。
+  if (typeof updateCurrentSegmentTrace === 'function') {
+    var _updateCurrentSegmentTrace = updateCurrentSegmentTrace;
+    updateCurrentSegmentTrace = function(){
+      try{
+        if(currentSegmentId){
+          var seg = audioSegments.find(function(s){return s.id===currentSegmentId;});
+          if(seg && seg.traceSnapshot && seg.traceSnapshot.length && playbackCursorOnly) return;
+        }
+      }catch(e){}
+      return _updateCurrentSegmentTrace.apply(this, arguments);
+    };
+  }
+
+  if (typeof playSegment === 'function') {
+    playSegment = async function(id){
+      var seg = audioSegments.find(function(s){return s.id===id;});
+      if(!seg || !seg.url) return;
+      freezeSegment(seg);
+      if(currentSegmentId===id && audioEl && !audioEl.paused){
+        audioEl.pause(); seg.playing=false; renderSegmentList(false); draw(); return;
+      }
+      try{ stopSegmentPlayers(); }catch(e){}
+      try{ stopFilePlayback(); }catch(e){}
+      currentSegmentId = seg.id;
+      mode = seg.type === 'recording' ? 'recording' : 'file';
+      var hasTrace = !!(seg.traceSnapshot && seg.traceSnapshot.length);
+      audioEl.dataset.sourceMode = seg.type === 'recording' ? 'recording' : 'file';
+      audioEl.dataset.url = seg.url;
+      audioEl.dataset.segmentId = seg.id;
+      audioEl.dataset.hasMelodyTrace = hasTrace ? 'true' : 'false';
+      audioEl.src = seg.url;
+      try{ audioEl.currentTime = 0; }catch(e){}
+      playbackCursorOnly = hasTrace;
+      if(hasTrace){
+        setPrimaryTraceFromSegment(seg, {scroll:true, resetTime:false});
+      }else{
+        setMainViewToLiveOrEmpty(); resetAnalysisState();
+      }
+      setSegmentPlaying(id, true);
+      try{ audioEl.load(); }catch(e){}
+      try{
+        await audioEl.play();
+        if(hasTrace) setPrimaryTraceFromSegment(seg, {scroll:false, resetTime:false});
+      }catch(e){
+        console.warn(e);
+        setStatus('<span class="pill">播放提示</span>浏览器阻止自动播放，请再点击一次播放按钮。');
+      }
+      updateStagePlaybackUI(); draw();
+    };
+  }
+
+  // 查看旋律也强制使用快照。
+  if (typeof segmentList !== 'undefined' && segmentList) {
+    segmentList.addEventListener('click', function(e){
+      var btn = e.target.closest('button[data-action="show"]');
+      if(!btn) return;
+      var row=e.target.closest('.segment-row'); if(!row) return;
+      var id=row.dataset.id;
+      var seg=audioSegments.find(function(s){return s.id===id;});
+      if(seg){ freezeSegment(seg); if(seg.traceSnapshot && seg.traceSnapshot.length){ e.stopImmediatePropagation(); setPrimaryTraceFromSegment(seg,{scroll:true}); setStatus('<span class="pill">已切换旋律线</span>主观察区已恢复“'+escapeHtml(seg.name)+'”对应旋律线。'); }}
+    }, true);
+  }
+
+  // 录音结束后额外保存当前片段快照；延迟执行，覆盖原 onstop 之后的数据。
+  function freezeLatestRecording(){
+    try{
+      var seg = audioSegments[audioSegments.length-1];
+      if(seg && seg.type==='recording'){
+        if(!seg.trace || !seg.trace.length){
+          var src = (typeof activeRecordingTrace !== 'undefined' && activeRecordingTrace.length) ? activeRecordingTrace : points;
+          seg.trace = cloneTraceArray(src).map(function(p){p.segmentId=seg.id;p.segmentName=seg.name||'';return p;});
+        }
+        seg.traceSnapshot = cloneTraceArray(seg.trace).map(function(p){p.segmentId=seg.id;p.segmentName=seg.name||'';return p;});
+        setPrimaryTraceFromSegment(seg,{scroll:true, resetTime:false});
+        renderSegmentList(false); draw();
+      }
+    }catch(e){ console.warn('freeze latest recording failed', e); }
+  }
+  if (typeof stopMicRecorder === 'function') {
+    var _stopMicRecorder = stopMicRecorder;
+    stopMicRecorder = function(){ var r=_stopMicRecorder.apply(this, arguments); setTimeout(freezeLatestRecording, 450); setTimeout(freezeLatestRecording, 900); return r; };
+  }
+  window.addEventListener('DOMContentLoaded', function(){ setTimeout(refreshSegmentFreezeAll, 600); });
+})();
+</script>
+
 </body>
 </html>

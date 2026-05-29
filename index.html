@@ -334,7 +334,39 @@
   
 .manual-cover{padding:6px 0 12px;border-bottom:1px solid #d5e1ec;margin-bottom:16px}.manual-cover h3{font-size:28px;margin:0 0 10px;color:#12314c}.manual-note{color:#274861}.manual-bullet{margin:6px 0}.manual-bullet a{color:#0b5f91;text-decoration:none;font-weight:700}.manual-bullet a:hover{text-decoration:underline}
 
-  </style>
+  
+/* V5.9：节奏拍线与快捷和弦编配 */
+.rhythm-beat-marker{position:absolute;top:0;bottom:0;width:1px;background:rgba(125,211,252,.24);z-index:1;pointer-events:none}.rhythm-beat-marker.bar{width:2px;background:rgba(216,181,107,.58)}.rhythm-beat-marker span{position:absolute;top:4px;left:4px;font-size:11px;color:#f4d06f;font-weight:800;white-space:nowrap}.rhythm-v46-catcher{z-index:3}.rhythm-v46-event{z-index:5}
+.chord-compose-panel{margin-top:14px;padding:14px;border-radius:22px;background:rgba(7,18,34,.72);border:1px solid rgba(162,191,217,.15)}.chord-topbar{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;border-bottom:1px solid rgba(162,191,217,.12);padding-bottom:10px}.chord-topbar h3{margin:0 0 4px;font-size:22px}.chord-topbar p{margin:0;color:var(--muted);font-size:13px}.chord-actions,.chord-bar-toolbar{display:flex;gap:8px;flex-wrap:wrap}.chord-bar-toolbar{align-items:center;margin:10px 0}.chord-auto-next{display:inline-flex;align-items:center;gap:6px;color:#dcecff;font-size:13px;padding:8px 12px;border-radius:999px;background:rgba(20,42,68,.76);border:1px solid rgba(162,191,217,.13)}.chord-track-wrap{position:relative;overflow-x:auto;padding:8px 0 10px;border-radius:18px;background:#1e252b;border:1px solid rgba(255,255,255,.08)}.chord-track{display:flex;min-height:108px;align-items:stretch}.chord-bar{min-width:118px;border-right:2px solid rgba(216,181,107,.38);background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.015));display:grid;grid-template-rows:28px 1fr}.chord-bar.selected{outline:3px solid rgba(101,200,215,.68);outline-offset:-3px}.chord-bar-head{font-weight:900;color:#f4d06f;font-size:12px;padding:6px 8px;border-bottom:1px solid rgba(255,255,255,.08)}.chord-slots{display:grid;gap:4px;padding:7px}.chord-slot{display:grid;place-items:center;min-height:46px;border-radius:12px;background:rgba(8,20,38,.82);border:1px solid rgba(162,191,217,.13);color:#eef9ff;font-size:20px;font-weight:900;cursor:pointer;user-select:none}.chord-slot.selected{background:rgba(101,200,215,.22);border-color:rgba(101,200,215,.7)}.chord-slot.empty{color:#6d8196}.chord-playhead{position:absolute;top:0;bottom:0;width:3px;background:#65c8d7;box-shadow:0 0 16px rgba(101,200,215,.8);display:none;pointer-events:none}.chord-panel-tabs{display:flex;gap:8px;overflow-x:auto;margin-top:12px}.chord-panel-tabs button{min-width:100px;border:1px solid rgba(162,191,217,.15);background:rgba(20,42,68,.8);color:#eaf7ff;border-radius:14px;padding:10px 12px;font-weight:900}.chord-panel-tabs button.active{background:linear-gradient(135deg,#65c8d7,#57d39b);color:#07111f}.chord-button-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(82px,1fr));gap:10px;margin-top:10px}.chord-btn{min-height:56px;border-radius:16px;border:1px solid rgba(162,191,217,.14);background:#edf6ff;color:#0d2036;font-size:18px;font-weight:1000;box-shadow:0 6px 14px rgba(0,0,0,.18)}.chord-btn.clear{background:#ffe8e8;color:#722}.chord-btn.favorite{background:#fff2c9}.chord-btn:active{transform:scale(.98)}
+
+
+
+/* ===== V6.2 修复：钢琴卷帘键盘与音符网格严格对齐 =====
+   原因：键盘行高被样式覆盖为 26px，而卷帘网格与音符定位按 24px 计算，导致越往下越错位。
+   处理：统一键盘、网格、音符定位的行高为 24px，并移除额外 margin 偏移。 */
+:root{--piano-row-h:24px;}
+#melody .cubase-roll-v38 .piano-key,
+#melody .cubase-roll-wrap .piano-key,
+#melody .cubase-piano-keys .piano-key{
+  height:var(--piano-row-h)!important;
+  min-height:var(--piano-row-h)!important;
+  max-height:var(--piano-row-h)!important;
+  line-height:var(--piano-row-h)!important;
+  padding-top:0!important;
+  padding-bottom:0!important;
+  box-sizing:border-box!important;
+}
+#melody .cubase-roll-v38 .roll-grid,
+#melody .cubase-roll-grid{
+  background-size:var(--unit-w) 100%, calc(var(--unit-w) * var(--units-bar)) 100%, 100% var(--piano-row-h)!important;
+}
+#melody .cubase-roll-grid .note-block,
+#melody .note-block{
+  box-sizing:border-box!important;
+  margin-top:0!important;
+}
+
+</style>
 
 <style id="v43-patch-style">
 /* V4.3 修复：节奏轨道首屏显示、分类小键盘、播放光标 */
@@ -378,7 +410,12 @@
   
 .manual-cover{padding:6px 0 12px;border-bottom:1px solid #d5e1ec;margin-bottom:16px}.manual-cover h3{font-size:28px;margin:0 0 10px;color:#12314c}.manual-note{color:#274861}.manual-bullet{margin:6px 0}.manual-bullet a{color:#0b5f91;text-decoration:none;font-weight:700}.manual-bullet a:hover{text-decoration:underline}
 
-  </style>
+  
+/* V5.9：节奏拍线与快捷和弦编配 */
+.rhythm-beat-marker{position:absolute;top:0;bottom:0;width:1px;background:rgba(125,211,252,.24);z-index:1;pointer-events:none}.rhythm-beat-marker.bar{width:2px;background:rgba(216,181,107,.58)}.rhythm-beat-marker span{position:absolute;top:4px;left:4px;font-size:11px;color:#f4d06f;font-weight:800;white-space:nowrap}.rhythm-v46-catcher{z-index:3}.rhythm-v46-event{z-index:5}
+.chord-compose-panel{margin-top:14px;padding:14px;border-radius:22px;background:rgba(7,18,34,.72);border:1px solid rgba(162,191,217,.15)}.chord-topbar{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;border-bottom:1px solid rgba(162,191,217,.12);padding-bottom:10px}.chord-topbar h3{margin:0 0 4px;font-size:22px}.chord-topbar p{margin:0;color:var(--muted);font-size:13px}.chord-actions,.chord-bar-toolbar{display:flex;gap:8px;flex-wrap:wrap}.chord-bar-toolbar{align-items:center;margin:10px 0}.chord-auto-next{display:inline-flex;align-items:center;gap:6px;color:#dcecff;font-size:13px;padding:8px 12px;border-radius:999px;background:rgba(20,42,68,.76);border:1px solid rgba(162,191,217,.13)}.chord-track-wrap{position:relative;overflow-x:auto;padding:8px 0 10px;border-radius:18px;background:#1e252b;border:1px solid rgba(255,255,255,.08)}.chord-track{display:flex;min-height:108px;align-items:stretch}.chord-bar{min-width:118px;border-right:2px solid rgba(216,181,107,.38);background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.015));display:grid;grid-template-rows:28px 1fr}.chord-bar.selected{outline:3px solid rgba(101,200,215,.68);outline-offset:-3px}.chord-bar-head{font-weight:900;color:#f4d06f;font-size:12px;padding:6px 8px;border-bottom:1px solid rgba(255,255,255,.08)}.chord-slots{display:grid;gap:4px;padding:7px}.chord-slot{display:grid;place-items:center;min-height:46px;border-radius:12px;background:rgba(8,20,38,.82);border:1px solid rgba(162,191,217,.13);color:#eef9ff;font-size:20px;font-weight:900;cursor:pointer;user-select:none}.chord-slot.selected{background:rgba(101,200,215,.22);border-color:rgba(101,200,215,.7)}.chord-slot.empty{color:#6d8196}.chord-playhead{position:absolute;top:0;bottom:0;width:3px;background:#65c8d7;box-shadow:0 0 16px rgba(101,200,215,.8);display:none;pointer-events:none}.chord-panel-tabs{display:flex;gap:8px;overflow-x:auto;margin-top:12px}.chord-panel-tabs button{min-width:100px;border:1px solid rgba(162,191,217,.15);background:rgba(20,42,68,.8);color:#eaf7ff;border-radius:14px;padding:10px 12px;font-weight:900}.chord-panel-tabs button.active{background:linear-gradient(135deg,#65c8d7,#57d39b);color:#07111f}.chord-button-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(82px,1fr));gap:10px;margin-top:10px}.chord-btn{min-height:56px;border-radius:16px;border:1px solid rgba(162,191,217,.14);background:#edf6ff;color:#0d2036;font-size:18px;font-weight:1000;box-shadow:0 6px 14px rgba(0,0,0,.18)}.chord-btn.clear{background:#ffe8e8;color:#722}.chord-btn.favorite{background:#fff2c9}.chord-btn:active{transform:scale(.98)}
+
+</style>
 
 </head>
 <body>
@@ -412,7 +449,7 @@
             <option>5/4</option><option>5/8</option><option>7/4</option><option>7/8</option>
           </optgroup>
         </select></label>
-        <label class="field">小节数<input id="globalBars" type="number" min="1" max="35" value="35" style="width:72px"></label>
+        <label class="field">小节数<input id="globalBars" type="number" min="1" max="300" value="35" style="width:86px"></label>
         <label class="field">BPM<input id="globalBpm" type="number" min="40" max="200" value="80" style="width:72px"></label>
         <input id="globalBpmRange" type="range" min="40" max="200" value="80" style="accent-color:var(--accent)">
         <label class="switch global-metro-switch"><span>播放时开节拍器</span><input id="globalMetroEnabled" type="checkbox" checked></label><button id="globalPlay" class="btn primary mini">▶ 播放</button><button id="globalStop" class="btn ghost mini">■ 停止</button><button id="fullscreenCurrent" class="btn ghost mini">全屏显示</button>
@@ -492,6 +529,29 @@
           <button id="playMelody" class="btn primary mini">▶ 试听旋律</button><button id="resetMelody" class="btn ghost mini">重置</button><button id="melodyToNotation" class="btn ghost mini">转简谱 / 五线谱</button>
         </div>
         <div class="cubase-arrange-shell cubase-v38-shell"><section class="cubase-piano-editor"><div class="cubase-ruler" id="pianoRuler"></div><div class="roll-wrap cubase-roll-wrap cubase-roll-v38"><div id="pianoKeys" class="piano-keys cubase-piano-keys"></div><div id="pianoRoll" class="roll-grid cubase-roll-grid"></div></div></section></div>
+        <section class="chord-compose-panel" id="chordComposePanel">
+          <div class="chord-topbar">
+            <div><h3>快捷和弦编配</h3><p>点小节 → 点和弦，和弦轨与钢琴卷帘同步，可单独播放也可与旋律一起播放。</p></div>
+            <div class="chord-actions">
+              <button id="playChords" class="btn ghost mini">▶ 播放和弦</button>
+              <button id="playMelodyChords" class="btn primary mini">▶ 旋律+和弦</button>
+              <button id="stopChords" class="btn ghost mini">■ 停止</button>
+              <button id="exportChordChart" class="btn ghost mini">导出和弦图</button><label class="chord-mini-field">和弦音色<select id="chordInstrument"><option value="grandPiano">大钢琴</option><option value="electricPiano">电钢琴</option><option value="musicBox">音乐盒</option><option value="glockenspiel">钟琴</option><option value="violin">弦乐</option><option value="cello">大提琴</option><option value="flute">长笛</option><option value="synthLead">合成垫</option></select></label>
+            </div>
+          </div>
+          <div class="chord-bar-toolbar">
+            <button id="splitChord1" class="btn mini ghost">整小节</button>
+            <button id="splitChord2" class="btn mini ghost">拆分 2 格</button>
+            <button id="splitChord4" class="btn mini ghost">拆分 4 格</button>
+            <button id="clearChord" class="btn mini ghost">✕ 清空当前</button><button id="clearAllChords" class="btn mini ghost">一键清空和弦</button>
+            <button id="copyChord" class="btn mini ghost">复制</button>
+            <button id="pasteChord" class="btn mini ghost">粘贴</button>
+            <label class="chord-auto-next"><input id="chordAutoNext" type="checkbox" checked> 自动跳到下一小节</label>
+          </div>
+          <div class="chord-track-wrap"><div id="chordTrack" class="chord-track"></div><div id="chordPlayhead" class="chord-playhead"></div></div>
+          <div class="chord-assistant-v60" id="chordAssistantV60"><div class="chord-assistant-title">和弦编辑器</div><div class="chord-assistant-columns"><div><b>根音符</b><div id="chordRootGrid" class="chord-editor-grid"></div></div><div><b>和弦类型</b><div id="chordTypeGrid" class="chord-editor-grid"></div></div><div><b>引申音</b><div id="chordExtGrid" class="chord-editor-grid"></div></div><div><b>低音音符</b><div id="chordBassGrid" class="chord-editor-grid"></div></div></div><div class="chord-editor-preview"><span id="chordEditPreview">C</span><button id="applyEditedChord" class="btn primary mini">填入当前小节</button><button id="previewEditedChord" class="btn ghost mini">试听</button></div><div class="chord-mini-keyboard" aria-hidden="true"><span></span><i></i><span></span><i></i><span></span><span></span><i></i><span></span><i></i><span></span><i></i><span></span></div></div><div class="chord-panel-tabs" id="chordTabs"></div>
+          <div class="chord-button-grid" id="chordButtons"></div>
+        </section>
       </div>
     </section>
 
@@ -541,159 +601,150 @@
 
     
 
+
 <section id="manual" class="page">
   <div class="card light manual-body">
     <div class="manual-cover">
-<h3>音乐教学工具箱<br>操作手册</h3>
-<p class="manual-note"><strong>一站式辅助音乐教学网站系统｜教师与学生共用版 作者：郑壹健</strong></p>
-<p><a href="docs/音乐教学工具箱_操作手册.docx" download>下载 Word 操作手册</a>&nbsp;｜&nbsp;<a href="docs/音乐教学工具箱_操作手册.pdf" download>下载 PDF 操作手册</a></p>
-</div>
-<table>
-<tr><th>项目</th><th>说明</th></tr>
-<tr><td>适用对象</td><td>中小学音乐课堂、初中音乐教学、视唱练耳、节奏训练、旋律创编和课堂展示。</td></tr>
-<tr><td>系统形态</td><td>纯前端网页系统，可部署到 Cloudflare Pages、GitHub Pages、Netlify，也可本地打开测试。</td></tr>
-<tr><td>核心模块</td><td>实时音频旋律线条可视化、音乐节奏创编、旋律创编、节拍器、作品保存和操作手册。</td></tr>
-<tr><td>操作特点</td><td>左侧功能栏切换模块，右侧打开对应页面；支持全屏显示、全局 BPM / 拍号 / 小节数联动。</td></tr>
-<tr><td>建议设备</td><td>Chrome 或 Edge 浏览器；电脑 / 平板 / 教室大屏；实时录音建议使用 USB 麦克风或领夹麦。</td></tr>
-</table>
-<h3 id="manual-toc-heading">目录</h3>
-<p class="manual-bullet"><a href="#manual-overview">一、系统概述</a></p>
-<p class="manual-bullet"><a href="#manual-layout">二、界面结构与通用操作</a></p>
-<p class="manual-bullet"><a href="#manual-visualizer">三、实时音频旋律线条可视化</a></p>
-<p class="manual-bullet"><a href="#manual-rhythm">四、音乐节奏创编</a></p>
-<p class="manual-bullet"><a href="#manual-melody">五、旋律创编</a></p>
-<p class="manual-bullet"><a href="#manual-metronome">六、节拍器</a></p>
-<p class="manual-bullet"><a href="#manual-save">七、作品保存与导出</a></p>
-<p class="manual-bullet"><a href="#manual-classroom">八、课堂使用建议</a></p>
-<p class="manual-bullet"><a href="#manual-faq">九、常见问题排查</a></p>
-<h3 id="manual-overview">一、系统概述</h3>
-<p>“音乐教学工具箱”是一套面向音乐课堂的创意创编与可视化辅助网站。系统以“听、看、创、演、评”为核心，把音频旋律线、节奏创编、旋律创编、节拍器和作品保存整合在同一平台中，方便教师课堂演示，也方便学生自主探索。</p>
-<table>
-<tr><th>模块</th><th>主要功能</th><th>教学用途</th></tr>
-<tr><td>实时音频旋律线条可视化</td><td>录音、上传音频、旋律线显示、音高/力度/乐句观察、简谱/五线谱生成。</td><td>演唱示范、音准反馈、乐句分析、学生演唱对比。</td></tr>
-<tr><td>音乐节奏创编</td><td>节奏小键盘、四轨节奏轨道、拖拽素材、附点、休止、试听与转谱。</td><td>节奏模仿、节奏组合、声部合作和创意编配。</td></tr>
-<tr><td>旋律创编</td><td>钢琴卷帘、音符点写、拖动位置/音高/时值、音色试听、光标播放。</td><td>音高、音区、级进/跳进、旋律发展与创作。</td></tr>
-<tr><td>节拍器</td><td>BPM、拍号、强弱规律、声音开关、多种可视化模式。</td><td>速度控制、强弱拍理解、齐唱齐奏训练。</td></tr>
-<tr><td>作品保存</td><td>保存、读取、导出作品数据。</td><td>课堂成果留存、小组展示和过程性评价。</td></tr>
-</table>
-<h3 id="manual-layout">二、界面结构与通用操作</h3>
-<table>
-<tr><th>区域</th><th>说明</th><th>操作建议</th></tr>
-<tr><td>左侧功能栏</td><td>包含首页、实时旋律可视化、节奏创编、旋律创编、节拍器、作品保存、操作手册等入口。</td><td>点击菜单切换右侧页面；可使用收起/展开按钮扩大操作区。</td></tr>
-<tr><td>顶部全局控制</td><td>集中设置拍号、BPM、全局小节数、全局播放、停止和全屏显示。</td><td>先设定课堂统一速度与拍号，再进入具体模块创编。</td></tr>
-<tr><td>右侧工作区</td><td>显示当前功能页面。</td><td>根据当前教学任务选择模块，必要时开启全屏显示。</td></tr>
-<tr><td>全屏显示</td><td>当前打开哪个功能，就全屏显示当前功能页面。</td><td>适合投屏演示、学生展示、课堂观察。</td></tr>
-</table>
-<p class="manual-bullet">• 建议课堂开始前先设置全局 BPM、拍号和小节数。</p>
-<p class="manual-bullet">• 系统以十六分音符网格作为基础精度；节奏与旋律可以跨小节延展。</p>
-<p class="manual-bullet">• 播放起点可在相关轨道中点击或拖动光标设置，再从指定位置开始试听。</p>
-<h3 id="manual-visualizer">三、实时音频旋律线条可视化</h3>
-<p>该模块用于把麦克风录音或上传音频转换为旋律线条，帮助学生直观看见音高变化、力度强弱、休止换气和乐句结构。</p>
-<table>
-<tr><th>功能</th><th>操作方法</th><th>说明</th></tr>
-<tr><td>开始录音</td><td>点击“开始录音”，允许麦克风权限，听提示后演唱。</td><td>录音时系统会绘制旋律线，结束后可回放。</td></tr>
-<tr><td>暂停/继续/结束录音</td><td>录音中可暂停，继续后接着绘制；结束后生成音频。</td><td>适合分句练习或教师讲解后继续录制。</td></tr>
-<tr><td>上传音频</td><td>点击上传 mp3 / wav。</td><td>适合导入范唱、伴奏片段或学生作品。</td></tr>
-<tr><td>观察旋律线</td><td>看线条高低、粗细、断开、乐句标记和播放光标。</td><td>上行表示音高升高，下行表示音高降低，断开多为休止或换气。</td></tr>
-<tr><td>隐藏音名</td><td>使用“隐藏音名”开关。</td><td>可在讲解旋律线形态时减少视觉干扰。</td></tr>
-<tr><td>生成谱例</td><td>点击“生成简谱 / 五线谱”。</td><td>谱例用于课堂参考，复杂音频仍需教师校对。</td></tr>
-<tr><td>保存图片/导出谱图</td><td>点击保存或导出按钮。</td><td>用于课件、作业反馈或学生作品记录。</td></tr>
-</table>
-<table>
-<tr><th>参数</th><th>作用</th><th>调节建议</th></tr>
-<tr><td>休止阈值</td><td>判断有效声音与休止/噪声。</td><td>嘈杂教室调高；声音较小或识别不到时调低。</td></tr>
-<tr><td>线条平滑</td><td>控制旋律线抖动程度。</td><td>课堂展示可调高；观察滑音、装饰音可适当调低。</td></tr>
-<tr><td>最低音/最高音</td><td>控制识别与显示音域。</td><td>男声可降低最低音；童声、女声和高音乐器可提高最高音。</td></tr>
-<tr><td>乐句停顿</td><td>判断多长停顿算新乐句。</td><td>分句太碎调高；不容易分句调低。</td></tr>
-</table>
-<h3 id="manual-rhythm">四、音乐节奏创编</h3>
-<p>节奏创编采用“小键盘素材库 + 四轨节奏轨道”的方式。学生可以把标准节奏素材拖入任意轨道，组合成多声部节奏作品。</p>
-<table>
-<tr><th>操作</th><th>方法</th><th>说明</th></tr>
-<tr><td>选择素材页</td><td>点击小键盘页签 1、2、3、4 或 All。</td><td>素材按基础时值、连音、切分、组合/休止/长音等归类。</td></tr>
-<tr><td>拖入轨道</td><td>将节奏卡片拖到四轨节奏轨道。</td><td>可拖入任意轨道和任意小节位置。</td></tr>
-<tr><td>附点使用</td><td>将“附点”拖到音符或休止后面。</td><td>附点独立显示，时值自动等于前一个音符或休止的一半。</td></tr>
-<tr><td>删除节奏块</td><td>双击轨道中的节奏块，或选中后点击“删除选中”。</td><td>支持删除普通节奏、休止和附点块。</td></tr>
-<tr><td>分别试听</td><td>点击轨道 1、轨道 2、轨道 3、轨道 4。</td><td>可单独听某一声部。</td></tr>
-<tr><td>同时试听</td><td>点击“同时试听”。</td><td>四条轨道按同一时间轴同步播放。</td></tr>
-<tr><td>从头播放</td><td>点击从头播放。</td><td>播放光标回到第 1 小节第 1 格开始。</td></tr>
-<tr><td>选择音色</td><td>每条轨道单独选择音色。</td><td>可用木鱼、小军鼓、踩镲、铃鼓、沙锤、邦戈鼓等打击乐音色。</td></tr>
-</table>
-<table>
-<tr><th>节奏素材类别</th><th>示例</th><th>教学用途</th></tr>
-<tr><td>基础时值</td><td>全音符、二分音符、四分音符、八分音符、十六分音符。</td><td>认识音符长短与网格占比。</td></tr>
-<tr><td>休止类</td><td>全休止、二分休止、四分休止、八分休止、十六分休止。</td><td>练习停顿、留白和呼吸。</td></tr>
-<tr><td>附点类</td><td>附点、附点四分 + 八分、附点八分 + 十六分。</td><td>理解延长一半的节奏感觉。</td></tr>
-<tr><td>连音类</td><td>八分三连音、十六分三连音等。</td><td>感受均分与不均分节奏。</td></tr>
-<tr><td>切分类</td><td>小切分、大切分、十六分切分。</td><td>练习重音转移和节奏推动。</td></tr>
-<tr><td>组合类</td><td>音休穿插、两音一休、长音延展。</td><td>进行节奏句式创编。</td></tr>
-</table>
-<h3 id="manual-melody">五、旋律创编</h3>
-<p>旋律创编模块采用钢琴卷帘方式，学生可以在 C3—C5 音域内点写音符、拖动音高和位置，并调整音符时值。</p>
-<table>
-<tr><th>功能</th><th>操作方法</th><th>说明</th></tr>
-<tr><td>添加音符</td><td>在卷帘网格中点击。</td><td>根据当前音符时值添加旋律音。</td></tr>
-<tr><td>移动音符</td><td>拖动音符块。</td><td>可改变音高和时间位置。</td></tr>
-<tr><td>改变时值</td><td>拖动音符右侧边缘。</td><td>可拉长或缩短音符。</td></tr>
-<tr><td>删除音符</td><td>双击音符。</td><td>快速删除不需要的音。</td></tr>
-<tr><td>设置播放起点</td><td>点击标尺或拖动播放光标。</td><td>可从任意小节和拍位开始播放。</td></tr>
-<tr><td>从头播放</td><td>点击从头播放。</td><td>光标回到开头并播放。</td></tr>
-<tr><td>试听/暂停</td><td>点击试听旋律；播放中再次点击暂停。</td><td>播放光标会随进度移动。</td></tr>
-<tr><td>音阶模式</td><td>选择 C 大调、五声音阶或全音域。</td><td>五声音阶适合国风旋律创编。</td></tr>
-</table>
-<table>
-<tr><th>音色</th><th>特点</th><th>适合场景</th></tr>
-<tr><td>大钢琴 / 电钢琴</td><td>清晰、稳定，适合音高辨认。</td><td>旋律创作、视唱练习。</td></tr>
-<tr><td>音乐盒</td><td>音色明亮，适合短小旋律。</td><td>低年级创编、课堂展示。</td></tr>
-<tr><td>长笛 / 竹笛</td><td>线条感强，适合旋律走向展示。</td><td>民族风格、抒情旋律。</td></tr>
-<tr><td>小提琴 / 大提琴</td><td>延音明显，适合长线条旋律。</td><td>乐句分析、情绪表达。</td></tr>
-<tr><td>单簧管</td><td>音色柔和，适合中音区旋律。</td><td>旋律模仿与改编。</td></tr>
-</table>
-<h3 id="manual-metronome">六、节拍器</h3>
-<p>节拍器用于统一课堂速度和强弱拍。系统支持多种拍号、静音视觉律动和四种视觉表现模式。</p>
-<table>
-<tr><th>类别</th><th>支持拍号</th><th>强弱规律</th></tr>
-<tr><td>单拍子</td><td>2/4、3/4、3/8</td><td>每小节只有一个强拍，如 3/4：强 弱 弱。</td></tr>
-<tr><td>复拍子</td><td>4/4、6/8、9/8、12/8</td><td>包含强拍与次强拍，如 4/4：强 弱 次强 弱。</td></tr>
-<tr><td>混合拍子</td><td>5/4、5/8、7/4、7/8</td><td>强弱组合不规则，适合拓展节奏体验。</td></tr>
-</table>
-<table>
-<tr><th>视觉模式</th><th>表现方式</th><th>教学价值</th></tr>
-<tr><td>图形色块</td><td>强拍深色大色块，弱拍浅色色块，次强中等色块。</td><td>最直观，适合低年级和投屏。</td></tr>
-<tr><td>高低跳动波形</td><td>强拍高峰，弱拍低谷或平缓。</td><td>表现强弱起伏和律动方向。</td></tr>
-<tr><td>圆点大小</td><td>强拍大圆点，次强中圆点，弱拍小圆点。</td><td>快速区分轻重层次。</td></tr>
-<tr><td>竖线粗细/时长</td><td>强拍竖线粗且长，弱拍细且短。</td><td>类似节奏柱，适合节奏结构分析。</td></tr>
-</table>
-<h3 id="manual-save">七、作品保存与导出</h3>
-<table>
-<tr><th>功能</th><th>操作方法</th><th>说明</th></tr>
-<tr><td>保存作品</td><td>在作品保存页点击保存。</td><td>保存到浏览器本地，适合课堂临时保存。</td></tr>
-<tr><td>读取作品</td><td>选择已保存作品并读取。</td><td>可继续修改或展示。</td></tr>
-<tr><td>导出 JSON</td><td>导出作品数据文件。</td><td>适合备份或跨设备迁移。</td></tr>
-<tr><td>导出图片/谱图</td><td>在对应模块点击保存图片或导出谱图。</td><td>用于课件、作业反馈和作品评价。</td></tr>
-</table>
-<h3 id="manual-classroom">八、课堂使用建议</h3>
-<table>
-<tr><th>课堂环节</th><th>推荐用法</th><th>说明</th></tr>
-<tr><td>导入</td><td>用节拍器或旋律可视化展示一段音乐。</td><td>激发学生观察“声音如何变成图像”。</td></tr>
-<tr><td>示范</td><td>教师演唱或导入范唱，生成旋律线。</td><td>让学生描述上行、下行、强弱、休止和乐句。</td></tr>
-<tr><td>练习</td><td>学生分组进行节奏或旋律创编。</td><td>鼓励自由组合，不以对错为唯一评价。</td></tr>
-<tr><td>展示</td><td>全屏显示作品，分别试听各轨道。</td><td>引导学生听辨声部、节奏层次和旋律走向。</td></tr>
-<tr><td>评价</td><td>保存作品与截图。</td><td>形成过程性评价材料。</td></tr>
-</table>
-<h3 id="manual-faq">九、常见问题排查</h3>
-<table>
-<tr><th>问题</th><th>可能原因</th><th>解决方法</th></tr>
-<tr><td>开始录音无反应</td><td>未授权麦克风或非 HTTPS 环境。</td><td>允许麦克风权限；部署到 HTTPS；本地使用 localhost。</td></tr>
-<tr><td>旋律线不显示</td><td>声音太小、阈值过高或麦克风距离太远。</td><td>降低休止阈值，靠近麦克风，使用外接麦。</td></tr>
-<tr><td>节奏素材拖不进去</td><td>浏览器缩放或页面未完全加载。</td><td>刷新页面，确认轨道已显示，建议 Chrome/Edge。</td></tr>
-<tr><td>附点显示异常</td><td>附点前没有可延长的音符或休止。</td><td>先放置音符/休止，再把附点拖到后面。</td></tr>
-<tr><td>旋律播放没有声音</td><td>浏览器音频上下文未启动或系统静音。</td><td>先点击页面任意播放按钮，检查系统音量。</td></tr>
-<tr><td>谱例不完全准确</td><td>复杂音频、伴奏或多声部影响识别。</td><td>使用单声部录音，生成后由教师校对。</td></tr>
-<tr><td>网页更新后仍是旧版</td><td>浏览器缓存。</td><td>按 Ctrl+F5 强制刷新，或清理缓存后重新打开。</td></tr>
-</table>
+      <h3>音乐教学工具箱<br>操作手册</h3>
+      <p class="manual-note"><strong>一站式辅助音乐教学网站系统｜教师与学生共用版｜作者：郑壹健</strong></p>
+      <p><a href="docs/音乐教学工具箱_操作手册.docx" download>下载 Word 操作手册</a>&nbsp;｜&nbsp;<a href="docs/音乐教学工具箱_操作手册.pdf" download>下载 PDF 操作手册</a></p>
+      <table><tbody>
+        <tr><td>适用对象</td><td>中小学音乐课堂、初中音乐教学、视唱练耳、节奏训练、旋律创编、和弦编配与课堂展示。</td></tr>
+        <tr><td>系统形态</td><td>纯前端网页系统，可部署到 Cloudflare Pages、GitHub Pages、Netlify，也可本地打开测试。</td></tr>
+        <tr><td>核心模块</td><td>实时音频旋律线条可视化、音乐节奏创编、旋律创编、快捷和弦编配、节拍器、作品保存和操作手册。</td></tr>
+        <tr><td>操作特点</td><td>左侧功能栏切换模块，右侧打开对应页面；支持全屏显示、全局 BPM / 拍号 / 小节数联动，小节数最高支持 300 小节。</td></tr>
+        <tr><td>建议设备</td><td>Chrome 或 Edge 浏览器；电脑 / 平板 / 教室大屏；实时录音建议使用 USB 麦克风或领夹麦。</td></tr>
+      </tbody></table>
+    </div>
+    <h3 id="manual-toc-heading">目录</h3>
+    <p class="manual-bullet"><a href="#manual-overview">一、系统概述</a></p>
+    <p class="manual-bullet"><a href="#manual-layout">二、界面结构与通用操作</a></p>
+    <p class="manual-bullet"><a href="#manual-visualizer">三、实时音频旋律线条可视化</a></p>
+    <p class="manual-bullet"><a href="#manual-rhythm">四、音乐节奏创编</a></p>
+    <p class="manual-bullet"><a href="#manual-melody">五、旋律创编</a></p>
+    <p class="manual-bullet"><a href="#manual-chords">六、快捷和弦编配</a></p>
+    <p class="manual-bullet"><a href="#manual-metronome">七、节拍器</a></p>
+    <p class="manual-bullet"><a href="#manual-save">八、作品保存与导出</a></p>
+    <p class="manual-bullet"><a href="#manual-classroom">九、课堂使用建议</a></p>
+    <p class="manual-bullet"><a href="#manual-faq">十、常见问题排查</a></p>
+
+    <h3 id="manual-overview">一、系统概述</h3>
+    <p>“音乐教学工具箱”是一套面向音乐课堂的创意创编与可视化辅助网站。系统以“听、看、创、演、评”为核心，把音频旋律线、节奏创编、旋律创编、和弦编配、节拍器和作品保存整合在同一平台中，方便教师课堂演示，也方便学生自主探索。</p>
+    <table><thead><tr><th>模块</th><th>主要功能</th><th>教学用途</th></tr></thead><tbody>
+      <tr><td>实时音频旋律线条可视化</td><td>录音、上传音频、多段对比、旋律线显示、音高/力度/乐句观察、简谱/五线谱生成。</td><td>演唱示范、音准反馈、乐句分析、学生多次演唱对比。</td></tr>
+      <tr><td>音乐节奏创编</td><td>节奏小键盘、四轨节奏轨道、拖拽素材、附点、休止、试听与转谱。</td><td>节奏模仿、节奏组合、声部合作和创意编配。</td></tr>
+      <tr><td>旋律创编</td><td>钢琴卷帘、音符点写、拖动位置/音高/时值、音色试听、光标播放。</td><td>音高、音区、级进/跳进、旋律发展与创作。</td></tr>
+      <tr><td>快捷和弦编配</td><td>小节和弦轨、和弦编辑器、根音/类型/引申音/低音组合、和弦音色选择、试听与暂停。</td><td>和声入门、旋律伴奏、歌曲编配和课堂即兴伴奏。</td></tr>
+      <tr><td>节拍器</td><td>BPM、拍号、强弱规律、声音开关、多种可视化模式。</td><td>速度控制、强弱拍理解、齐唱齐奏训练。</td></tr>
+      <tr><td>作品保存</td><td>保存、读取、导出作品数据。</td><td>课堂成果留存、小组展示和过程性评价。</td></tr>
+    </tbody></table>
+
+    <h3 id="manual-layout">二、界面结构与通用操作</h3>
+    <table><thead><tr><th>区域</th><th>说明</th><th>操作建议</th></tr></thead><tbody>
+      <tr><td>左侧功能栏</td><td>包含首页、实时旋律可视化、节奏创编、旋律创编、节拍器、作品保存、操作手册等入口。</td><td>点击菜单切换右侧页面；可使用收起/展开按钮扩大操作区。</td></tr>
+      <tr><td>顶部全局控制</td><td>集中设置拍号、BPM、全局小节数、全局播放、停止和全屏显示。</td><td>先设定课堂统一速度与拍号，再进入具体模块创编。</td></tr>
+      <tr><td>右侧工作区</td><td>显示当前功能页面。</td><td>根据当前教学任务选择模块，必要时开启全屏显示。</td></tr>
+      <tr><td>全屏显示</td><td>当前打开哪个功能，就全屏显示当前功能页面。</td><td>适合投屏演示、学生展示、课堂观察。</td></tr>
+    </tbody></table>
+    <p class="manual-bullet">• 建议课堂开始前先设置全局 BPM、拍号和小节数。</p>
+    <p class="manual-bullet">• 系统以十六分音符网格作为基础精度；节奏与旋律可以跨小节延展。</p>
+    <p class="manual-bullet">• 播放起点可在相关轨道中点击或拖动光标设置，再从指定位置开始试听。</p>
+
+    <h3 id="manual-visualizer">三、实时音频旋律线条可视化</h3>
+    <p>该模块用于把麦克风录音或上传音频转换为旋律线条，帮助学生直观看见音高变化、力度强弱、休止换气和乐句结构。多段录音或导入音频可以保留为独立片段，用于同屏对比。</p>
+    <table><thead><tr><th>功能</th><th>操作方法</th><th>说明</th></tr></thead><tbody>
+      <tr><td>开始录音</td><td>点击“开始录音”，允许麦克风权限，听提示后演唱。</td><td>录音时系统会绘制旋律线，结束后可回放。</td></tr>
+      <tr><td>多段录音</td><td>每次结束录音后会生成一个独立片段。</td><td>每段音频与对应旋律线会绑定保存，可用于对比。</td></tr>
+      <tr><td>上传音频</td><td>点击上传 mp3 / wav，可导入一段或多段音频。</td><td>适合导入范唱、伴奏片段或学生作品。</td></tr>
+      <tr><td>重命名片段</td><td>在多段对比列表中点击重命名。</td><td>可标注“范唱”“第一次演唱”“第二次练习”等。</td></tr>
+      <tr><td>同屏对比</td><td>勾选需要显示的片段。</td><td>多段旋律线可在对比观测区同时显示。</td></tr>
+      <tr><td>观察旋律线</td><td>看线条高低、粗细、断开、乐句标记和播放光标。</td><td>上行表示音高升高，下行表示音高降低，断开多为休止或换气。</td></tr>
+      <tr><td>生成谱例</td><td>点击“生成简谱 / 五线谱”。</td><td>谱例用于课堂参考，复杂音频仍需教师校对。</td></tr>
+      <tr><td>保存图片/导出谱图</td><td>点击保存或导出按钮。</td><td>用于课件、作业反馈或学生作品记录。</td></tr>
+    </tbody></table>
+    <table><thead><tr><th>参数</th><th>作用</th><th>调节建议</th></tr></thead><tbody>
+      <tr><td>休止阈值</td><td>判断有效声音与休止/噪声。</td><td>嘈杂教室调高；声音较小或识别不到时调低。</td></tr>
+      <tr><td>线条平滑</td><td>控制旋律线抖动程度。</td><td>课堂展示可调高；观察滑音、装饰音可适当调低。</td></tr>
+      <tr><td>横轴 / 纵轴缩放</td><td>控制对比观测区的时间展开和高度。</td><td>横轴看细节，纵轴看音高起伏。</td></tr>
+    </tbody></table>
+
+    <h3 id="manual-rhythm">四、音乐节奏创编</h3>
+    <p>节奏创编采用“小键盘素材库 + 四轨节奏轨道”的方式。学生可以把标准节奏素材拖入任意轨道，组合成多声部节奏作品。</p>
+    <table><thead><tr><th>操作</th><th>方法</th><th>说明</th></tr></thead><tbody>
+      <tr><td>选择素材页</td><td>点击小键盘页签 1、2、3、4 或 All。</td><td>素材按基础时值、连音、切分、组合/休止/长音等归类。</td></tr>
+      <tr><td>插入轨道</td><td>将节奏卡片拖到四轨节奏轨道。</td><td>可拖入任意轨道和任意小节位置。</td></tr>
+      <tr><td>附点使用</td><td>将“附点”拖到音符或休止后面。</td><td>附点独立显示，时值自动等于前一个音符或休止的一半。</td></tr>
+      <tr><td>删除节奏块</td><td>双击轨道中的节奏块，或选中后点击“删除选中”。</td><td>支持删除普通节奏、休止和附点块。</td></tr>
+      <tr><td>分别试听 / 同时试听</td><td>点击轨道 1—4 或“同时试听”。</td><td>可单独听某一声部，也可四轨同步播放。</td></tr>
+      <tr><td>选择音色</td><td>每条轨道单独选择音色。</td><td>可用木鱼、小军鼓、踩镲、铃鼓、沙锤、邦戈鼓等打击乐音色。</td></tr>
+      <tr><td>生成谱例</td><td>点击“生成简谱 / 五线谱”。</td><td>根据当前节奏按十六分网格量化生成。</td></tr>
+    </tbody></table>
+
+    <h3 id="manual-melody">五、旋律创编</h3>
+    <p>旋律创编模块采用钢琴卷帘方式，学生可以在 C3—C5 音域内点写音符、拖动音高和位置，并调整音符时值。</p>
+    <table><thead><tr><th>功能</th><th>操作方法</th><th>说明</th></tr></thead><tbody>
+      <tr><td>添加音符</td><td>在卷帘网格中点击。</td><td>根据当前音符时值添加旋律音。</td></tr>
+      <tr><td>移动音符</td><td>拖动音符块。</td><td>可改变音高和时间位置。</td></tr>
+      <tr><td>改变时值</td><td>拖动音符右侧边缘。</td><td>可拉长或缩短音符。</td></tr>
+      <tr><td>删除音符</td><td>双击音符。</td><td>快速删除不需要的音。</td></tr>
+      <tr><td>设置播放起点</td><td>点击标尺或拖动播放光标。</td><td>可从任意小节和拍位开始播放。</td></tr>
+      <tr><td>试听/暂停</td><td>点击试听旋律；播放中再次点击暂停。</td><td>播放光标会随进度移动。</td></tr>
+    </tbody></table>
+
+    <h3 id="manual-chords">六、快捷和弦编配</h3>
+    <p>和弦编配位于旋律创编页面下方。它适合课堂快速给旋律配和弦，支持和弦轨与钢琴卷帘同步，也可以单独播放和弦。</p>
+    <table><thead><tr><th>功能</th><th>操作方法</th><th>说明</th></tr></thead><tbody>
+      <tr><td>填入和弦</td><td>点选小节或分格，在和弦编辑器中选择根音、类型、引申音和低音，点击“填入当前小节”。</td><td>可生成 C、Am、G7、Cadd9、G7/B 等和弦。</td></tr>
+      <tr><td>试听和弦</td><td>点击和弦编辑器里的“试听”。</td><td>会直接播放当前预览和弦，本版已修复按钮无声问题。</td></tr>
+      <tr><td>播放 / 暂停</td><td>点击“播放和弦”或“旋律+和弦”。</td><td>播放中按钮变为暂停，再点即可暂停。</td></tr>
+      <tr><td>和弦音色</td><td>在“和弦音色”中选择。</td><td>支持钢琴、电钢琴、音乐盒、弦乐、长笛、合成垫等。</td></tr>
+      <tr><td>删除与清空</td><td>双击和弦块删除，或点击“一键清空和弦”。</td><td>适合重新编配。</td></tr>
+      <tr><td>导出和弦图</td><td>点击“导出和弦图”。</td><td>生成和弦编配文本，便于投屏或打印。</td></tr>
+    </tbody></table>
+
+    <h3 id="manual-metronome">七、节拍器</h3>
+    <table><thead><tr><th>类别</th><th>支持拍号</th><th>强弱规律</th></tr></thead><tbody>
+      <tr><td>单拍子</td><td>2/4、3/4、3/8</td><td>每小节只有一个强拍，如 3/4：强 弱 弱。</td></tr>
+      <tr><td>复拍子</td><td>4/4、6/8、9/8、12/8</td><td>包含强拍与次强拍，如 4/4：强 弱 次强 弱。</td></tr>
+      <tr><td>混合拍子</td><td>5/4、5/8、7/4、7/8</td><td>强弱组合不规则，适合拓展节奏体验。</td></tr>
+    </tbody></table>
+    <table><thead><tr><th>视觉模式</th><th>表现方式</th><th>教学价值</th></tr></thead><tbody>
+      <tr><td>图形色块</td><td>强拍深色大色块，弱拍浅色色块，次强中等色块。</td><td>最直观，适合低年级和投屏。</td></tr>
+      <tr><td>高低跳动波形</td><td>强拍高峰，弱拍低谷或平缓。</td><td>表现强弱起伏和律动方向。</td></tr>
+      <tr><td>圆点大小</td><td>强拍大圆点，次强中圆点，弱拍小圆点。</td><td>快速区分轻重层次。</td></tr>
+      <tr><td>竖线粗细/时长</td><td>强拍竖线粗且长，弱拍细且短。</td><td>类似节奏柱，适合节奏结构分析。</td></tr>
+    </tbody></table>
+
+    <h3 id="manual-save">八、作品保存与导出</h3>
+    <table><thead><tr><th>功能</th><th>操作方法</th><th>说明</th></tr></thead><tbody>
+      <tr><td>保存作品</td><td>在作品保存页点击保存。</td><td>保存到浏览器本地，适合课堂临时保存。</td></tr>
+      <tr><td>读取作品</td><td>选择已保存作品并读取。</td><td>可继续修改或展示。</td></tr>
+      <tr><td>导出 JSON</td><td>导出作品数据文件。</td><td>适合备份或跨设备迁移。</td></tr>
+      <tr><td>导出图片/谱图</td><td>在对应模块点击保存图片或导出谱图。</td><td>用于课件、作业反馈和作品评价。</td></tr>
+    </tbody></table>
+
+    <h3 id="manual-classroom">九、课堂使用建议</h3>
+    <table><thead><tr><th>课堂环节</th><th>推荐用法</th><th>说明</th></tr></thead><tbody>
+      <tr><td>导入</td><td>用节拍器或旋律可视化展示一段音乐。</td><td>激发学生观察“声音如何变成图像”。</td></tr>
+      <tr><td>示范</td><td>教师演唱或导入范唱，生成旋律线。</td><td>让学生描述上行、下行、强弱、休止和乐句。</td></tr>
+      <tr><td>创编</td><td>学生分组进行节奏、旋律或和弦编配。</td><td>鼓励自由组合，不以对错为唯一评价。</td></tr>
+      <tr><td>展示</td><td>全屏显示作品，分别试听各轨道。</td><td>引导学生听辨声部、节奏层次、和声色彩和旋律走向。</td></tr>
+      <tr><td>评价</td><td>保存作品与截图。</td><td>形成过程性评价材料。</td></tr>
+    </tbody></table>
+
+    <h3 id="manual-faq">十、常见问题排查</h3>
+    <table><thead><tr><th>问题</th><th>可能原因</th><th>解决方法</th></tr></thead><tbody>
+      <tr><td>开始录音无反应</td><td>未授权麦克风或非 HTTPS 环境。</td><td>允许麦克风权限；部署到 HTTPS；本地使用 localhost。</td></tr>
+      <tr><td>旋律线不显示</td><td>声音太小、阈值过高或麦克风距离太远。</td><td>降低休止阈值，靠近麦克风，使用外接麦。</td></tr>
+      <tr><td>第一段录音被后续覆盖</td><td>使用旧版或未刷新缓存。</td><td>使用新版并按 Ctrl+F5 强制刷新。</td></tr>
+      <tr><td>节奏素材拖不进去</td><td>浏览器缩放或页面未完全加载。</td><td>刷新页面，确认轨道已显示，建议 Chrome/Edge。</td></tr>
+      <tr><td>和弦试听没有声音</td><td>浏览器音频上下文未启动或旧版按钮失效。</td><td>先点击页面任意播放按钮；本版已修复和弦编辑器“试听”。</td></tr>
+      <tr><td>谱例不完全准确</td><td>复杂音频、伴奏或多声部影响识别。</td><td>使用单声部录音，生成后由教师校对。</td></tr>
+      <tr><td>网页更新后仍是旧版</td><td>浏览器缓存。</td><td>按 Ctrl+F5 强制刷新，或清理缓存后重新打开。</td></tr>
+    </tbody></table>
   </div>
 </section>
+
 
   </main>
 </div>
@@ -1047,7 +1098,7 @@ setTimeout(()=>{renderRhythm();renderPianoRoll();drawViz();}, 60);
   const getRhythmScroller = () => document.querySelector('#rhythmEditor .rhythm-timeline-scroller');
   const getRollScroller = () => document.querySelector('.cubase-roll-v38');
   window.getGlobalBars = function(){
-    const v = Math.max(1, Math.min(35, Number($('globalBars')?.value || state.bars || 35)));
+    const v = Math.max(1, Math.min(300, Number($('globalBars')?.value || state.bars || 35)));
     state.bars = v; return v;
   };
   window.totalUnits = function(){
@@ -1172,7 +1223,7 @@ try{renderBeatDots();}catch(e){}
 (function(){
   function q(id){return document.getElementById(id)}
   function cloneBtn(id){const el=q(id); if(!el) return null; const n=el.cloneNode(true); el.parentNode.replaceChild(n,el); return n;}
-  function getBars(){const v=Math.max(1,Math.min(35,Number(q('globalBars')?.value||35))); if(q('globalBars')) q('globalBars').value=v; if(typeof state!=='undefined') state.bars=v; return v;}
+  function getBars(){const v=Math.max(1,Math.min(300,Number(q('globalBars')?.value||35))); if(q('globalBars')) q('globalBars').value=v; if(typeof state!=='undefined') state.bars=v; return v;}
   window.getGlobalBars=getBars;
   window.totalUnits=function(){const {unitsPerBar}=parseSig(); const base=getBars()*unitsPerBar; const rMax=(typeof rhythmEvents!=='undefined'&&rhythmEvents.length)?Math.max(...rhythmEvents.map(e=>e.cell+Number(e.units||1)),0):0; const mMax=(typeof melodyNotes!=='undefined'&&melodyNotes.length)?Math.max(...melodyNotes.map(n=>n.start+Number(n.units||1)),0):0; return Math.max(base,rMax+unitsPerBar,mMax+unitsPerBar,(state.playStartCell||0)+unitsPerBar);};
   function saveRhythmScroll(){const s=document.querySelector('#rhythmEditor .rhythm-timeline-scroller'); return s?{x:s.scrollLeft,y:s.scrollTop}:null;}
@@ -1357,7 +1408,12 @@ try{renderBeatDots();}catch(e){}
   
 .manual-cover{padding:6px 0 12px;border-bottom:1px solid #d5e1ec;margin-bottom:16px}.manual-cover h3{font-size:28px;margin:0 0 10px;color:#12314c}.manual-note{color:#274861}.manual-bullet{margin:6px 0}.manual-bullet a{color:#0b5f91;text-decoration:none;font-weight:700}.manual-bullet a:hover{text-decoration:underline}
 
-  </style>
+  
+/* V5.9：节奏拍线与快捷和弦编配 */
+.rhythm-beat-marker{position:absolute;top:0;bottom:0;width:1px;background:rgba(125,211,252,.24);z-index:1;pointer-events:none}.rhythm-beat-marker.bar{width:2px;background:rgba(216,181,107,.58)}.rhythm-beat-marker span{position:absolute;top:4px;left:4px;font-size:11px;color:#f4d06f;font-weight:800;white-space:nowrap}.rhythm-v46-catcher{z-index:3}.rhythm-v46-event{z-index:5}
+.chord-compose-panel{margin-top:14px;padding:14px;border-radius:22px;background:rgba(7,18,34,.72);border:1px solid rgba(162,191,217,.15)}.chord-topbar{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;border-bottom:1px solid rgba(162,191,217,.12);padding-bottom:10px}.chord-topbar h3{margin:0 0 4px;font-size:22px}.chord-topbar p{margin:0;color:var(--muted);font-size:13px}.chord-actions,.chord-bar-toolbar{display:flex;gap:8px;flex-wrap:wrap}.chord-bar-toolbar{align-items:center;margin:10px 0}.chord-auto-next{display:inline-flex;align-items:center;gap:6px;color:#dcecff;font-size:13px;padding:8px 12px;border-radius:999px;background:rgba(20,42,68,.76);border:1px solid rgba(162,191,217,.13)}.chord-track-wrap{position:relative;overflow-x:auto;padding:8px 0 10px;border-radius:18px;background:#1e252b;border:1px solid rgba(255,255,255,.08)}.chord-track{display:flex;min-height:108px;align-items:stretch}.chord-bar{min-width:118px;border-right:2px solid rgba(216,181,107,.38);background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.015));display:grid;grid-template-rows:28px 1fr}.chord-bar.selected{outline:3px solid rgba(101,200,215,.68);outline-offset:-3px}.chord-bar-head{font-weight:900;color:#f4d06f;font-size:12px;padding:6px 8px;border-bottom:1px solid rgba(255,255,255,.08)}.chord-slots{display:grid;gap:4px;padding:7px}.chord-slot{display:grid;place-items:center;min-height:46px;border-radius:12px;background:rgba(8,20,38,.82);border:1px solid rgba(162,191,217,.13);color:#eef9ff;font-size:20px;font-weight:900;cursor:pointer;user-select:none}.chord-slot.selected{background:rgba(101,200,215,.22);border-color:rgba(101,200,215,.7)}.chord-slot.empty{color:#6d8196}.chord-playhead{position:absolute;top:0;bottom:0;width:3px;background:#65c8d7;box-shadow:0 0 16px rgba(101,200,215,.8);display:none;pointer-events:none}.chord-panel-tabs{display:flex;gap:8px;overflow-x:auto;margin-top:12px}.chord-panel-tabs button{min-width:100px;border:1px solid rgba(162,191,217,.15);background:rgba(20,42,68,.8);color:#eaf7ff;border-radius:14px;padding:10px 12px;font-weight:900}.chord-panel-tabs button.active{background:linear-gradient(135deg,#65c8d7,#57d39b);color:#07111f}.chord-button-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(82px,1fr));gap:10px;margin-top:10px}.chord-btn{min-height:56px;border-radius:16px;border:1px solid rgba(162,191,217,.14);background:#edf6ff;color:#0d2036;font-size:18px;font-weight:1000;box-shadow:0 6px 14px rgba(0,0,0,.18)}.chord-btn.clear{background:#ffe8e8;color:#722}.chord-btn.favorite{background:#fff2c9}.chord-btn:active{transform:scale(.98)}
+
+</style>
 <script id="v46-rhythm-track-dot-fix">
 (function(){
   const q = id => document.getElementById(id);
@@ -1415,6 +1471,12 @@ try{renderBeatDots();}catch(e){}
       const track=document.createElement('div'); track.className='rhythm-v46-track';
       const name=document.createElement('div'); name.className='rhythm-v46-name'; name.textContent='轨道 '+trackNo;
       const grid=document.createElement('div'); grid.className='rhythm-v46-grid'; grid.style.width=(total*unitW)+'px'; grid.style.setProperty('--unit-w',unitW+'px'); grid.style.setProperty('--units-bar',unitsPerBar); grid.style.setProperty('--total-units',total);
+      const beatUnits = Math.max(1, 16 / ((typeof parseSig==='function' ? parseSig().bottom : 4) || 4));
+      for(let b=0; b<=total; b+=beatUnits){
+        const bl=document.createElement('div'); bl.className='rhythm-beat-marker '+((b%unitsPerBar)===0?'bar':'beat'); bl.style.left=(b*unitW)+'px';
+        if((b%unitsPerBar)===0){ const label=document.createElement('span'); label.textContent='小节 '+(Math.floor(b/unitsPerBar)+1); bl.appendChild(label); }
+        grid.appendChild(bl);
+      }
       const catcher=document.createElement('div'); catcher.className='rhythm-v46-catcher';
       for(let i=0;i<total;i++){ const cell=document.createElement('div'); cell.className='rhythm-v46-cell'; cell.dataset.cell=i; cell.dataset.track=trackNo; cell.addEventListener('click',()=>{ if(typeof setPlayStartCell==='function') setPlayStartCell(i); }); cell.addEventListener('dragover',e=>{e.preventDefault(); cell.classList.add('drop-over');}); cell.addEventListener('dragleave',()=>cell.classList.remove('drop-over')); cell.addEventListener('drop',e=>{e.preventDefault(); cell.classList.remove('drop-over'); window.dropRhythm(e,i,trackNo);}); catcher.appendChild(cell); }
       grid.appendChild(catcher);
@@ -1449,6 +1511,320 @@ try{renderBeatDots();}catch(e){}
 })();
 
 try{renderBeatDots();}catch(e){}
+</script>
+
+
+<script id="v59-chord-compose-and-rhythm-beatlines">
+(function(){
+  const $ = (id)=>document.getElementById(id);
+  const chordState = {bars:35, selectedBar:0, selectedSlot:0, group:'diatonic', copied:null, timer:null, playing:false};
+  let chords = [];
+  const CHORD_GROUPS = {
+    diatonic:['C','Dm','Em','F','G','Am','Bdim'],
+    basic:['C','Dm','Em','F','G','Am','Bb','D','E','A'],
+    seventh:['C7','Dm7','Em7','Fmaj7','G7','Am7','Bdim7'],
+    color:['Csus2','Csus4','Cadd9','Fsus2','Gsus4','Amadd9'],
+    fav:['C','G','Am','F','Dm','Em']
+  };
+  const GROUP_LABELS = {diatonic:'本调顺阶',basic:'基础和弦',seventh:'七和弦',color:'色彩和弦',fav:'我的收藏'};
+  const rootMap = {C:0,'C#':1,'Db':1,D:2,'D#':3,'Eb':3,E:4,F:5,'F#':6,'Gb':6,G:7,'G#':8,'Ab':8,A:9,'A#':10,'Bb':10,B:11};
+  function ensureChords(){ const barN=Math.max(1, Number($('globalBars')?.value)||35); chordState.bars=barN; while(chords.length<barN) chords.push({split:1, slots:['']}); if(chords.length>barN) chords.length=barN; }
+  function slotCount(bar){return chords[bar]?.split||1;}
+  function selectChordSlot(bar, slot=0){ ensureChords(); chordState.selectedBar=Math.max(0,Math.min(chordState.bars-1,bar)); chordState.selectedSlot=Math.max(0,Math.min(slotCount(chordState.selectedBar)-1,slot)); renderChordTrack(); }
+  function splitCurrent(n){ ensureChords(); const b=chords[chordState.selectedBar]; const old=b.slots.slice(); b.split=n; b.slots=Array.from({length:n},(_,i)=>old[i]||''); chordState.selectedSlot=Math.min(chordState.selectedSlot,n-1); renderChordTrack(); }
+  function setChord(name){ ensureChords(); const b=chords[chordState.selectedBar]; b.slots[chordState.selectedSlot]=name; renderChordTrack(); previewChord(name,.55); if($('chordAutoNext')?.checked){ let nb=chordState.selectedBar, ns=chordState.selectedSlot+1; if(ns>=b.split){ nb=Math.min(chordState.bars-1, nb+1); ns=0; } selectChordSlot(nb,ns); } }
+  function clearChord(){ ensureChords(); chords[chordState.selectedBar].slots[chordState.selectedSlot]=''; renderChordTrack(); }
+  function copyChord(){ ensureChords(); chordState.copied=JSON.parse(JSON.stringify(chords[chordState.selectedBar])); }
+  function pasteChord(){ ensureChords(); if(chordState.copied){ chords[chordState.selectedBar]=JSON.parse(JSON.stringify(chordState.copied)); renderChordTrack(); }}
+  function renderChordTrack(){ const track=$('chordTrack'); if(!track) return; ensureChords(); track.innerHTML=''; for(let i=0;i<chordState.bars;i++){ const bar=document.createElement('div'); bar.className='chord-bar '+(i===chordState.selectedBar?'selected':''); bar.dataset.bar=i; const head=document.createElement('div'); head.className='chord-bar-head'; head.textContent='小节 '+(i+1); bar.appendChild(head); const slots=document.createElement('div'); slots.className='chord-slots'; slots.style.gridTemplateColumns='repeat('+chords[i].split+', minmax(0,1fr))'; chords[i].slots.forEach((ch,j)=>{ const s=document.createElement('div'); s.className='chord-slot '+(ch?'':'empty')+(i===chordState.selectedBar&&j===chordState.selectedSlot?' selected':''); s.textContent=ch||'+'; s.title='点击选择｜长按试听/菜单'; s.onclick=()=>selectChordSlot(i,j); s.ondblclick=(ev)=>{ev.stopPropagation(); selectChordSlot(i,j); chords[i].slots[j]=''; renderChordTrack();}; let pressTimer=null; s.onpointerdown=()=>{pressTimer=setTimeout(()=>{ if(ch) previewChord(ch,.9); },450)}; s.onpointerup=()=>clearTimeout(pressTimer); s.oncontextmenu=(e)=>{e.preventDefault(); selectChordSlot(i,j); const action=prompt('输入操作：清空 / 复制 / 粘贴','清空'); if(action==='清空') clearChord(); if(action==='复制') copyChord(); if(action==='粘贴') pasteChord();}; slots.appendChild(s); }); bar.appendChild(slots); track.appendChild(bar); } }
+  function renderChordButtons(){ const tabs=$('chordTabs'), box=$('chordButtons'); if(!tabs||!box) return; tabs.innerHTML=''; Object.keys(CHORD_GROUPS).forEach(k=>{ const b=document.createElement('button'); b.textContent=GROUP_LABELS[k]; b.className=chordState.group===k?'active':''; b.onclick=()=>{chordState.group=k; renderChordButtons();}; tabs.appendChild(b); }); box.innerHTML=''; const clear=document.createElement('button'); clear.className='chord-btn clear'; clear.textContent='✕ 清空'; clear.onclick=clearChord; box.appendChild(clear); CHORD_GROUPS[chordState.group].forEach(name=>{ const b=document.createElement('button'); b.className='chord-btn '+(chordState.group==='fav'?'favorite':''); b.textContent=name; b.onpointerdown=()=>previewChord(name,.5); b.onclick=()=>setChord(name); box.appendChild(b); }); }
+  function chordNotes(name){ let m=name.match(/^([A-G](?:#|b)?)(.*)$/); if(!m) return [60,64,67]; const root=rootMap[m[1]]??0; const q=m[2]||''; let intervals=[0,4,7]; if(q.startsWith('m')&&!q.startsWith('maj')) intervals=[0,3,7]; if(q.includes('dim')) intervals=[0,3,6]; if(q.includes('sus2')) intervals=[0,2,7]; if(q.includes('sus4')) intervals=[0,5,7]; if(q.includes('7')) intervals.push(q.includes('maj7')?11:10); if(q.includes('add9')) intervals.push(14); return intervals.map(i=>60+root+i); }
+  function previewChord(name,dur=.7){ const a=ctx(); const start=a.currentTime+.03; const inst=($('chordInstrument')&&$('chordInstrument').value)||'electricPiano'; chordNotes(name).forEach((m,i)=>playTone(m,start,dur,inst)); }
+  function playChordSequence(startBar=0, withMelody=false){ stopChordPlayback(); ensureChords(); const a=ctx(); const start=a.currentTime+.08; const {unitsPerBar}=parseSig(); const unitSec=secPerUnit(); if(withMelody && typeof playMelody==='function') playMelody(startBar*unitsPerBar); chords.forEach((bar,bi)=>{ if(bi<startBar) return; const slotUnits=unitsPerBar/(bar.split||1); bar.slots.forEach((ch,si)=>{ if(!ch)return; const when=start+((bi-startBar)*unitsPerBar+si*slotUnits)*unitSec; const dur=slotUnits*unitSec*.92; chordNotes(ch).forEach(m=>playTone(m,when,dur,($('chordInstrument')&&$('chordInstrument').value)||'electricPiano'));  }); }); animateChordPlayhead(startBar); }
+  function animateChordPlayhead(startBar=0){ const ph=$('chordPlayhead'), wrap=document.querySelector('.chord-track-wrap'); if(!ph||!wrap)return; ph.style.display='block'; const barW=118; const dur=(chordState.bars-startBar)*parseSig().unitsPerBar*secPerUnit()*1000; const start=performance.now(); clearInterval(chordState.timer); chordState.timer=setInterval(()=>{ const p=(performance.now()-start)/dur; if(p>=1){stopChordPlayback();return;} ph.style.left=(startBar*barW+p*(chordState.bars-startBar)*barW)+'px'; },30); }
+  function stopChordPlayback(){ clearInterval(chordState.timer); chordState.timer=null; const ph=$('chordPlayhead'); if(ph) ph.style.display='none'; }
+  function exportChordChart(){ ensureChords(); const rows=chords.map((b,i)=>`${i+1}. ${b.slots.filter(Boolean).join(' | ') || '—'}`).join('\n'); const blob=new Blob([rows],{type:'text/plain;charset=utf-8'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='和弦编配.txt'; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),500); }
+  function boot(){ if(!$('chordComposePanel')) return; ensureChords(); renderChordTrack(); renderChordButtons(); $('splitChord1')?.addEventListener('click',()=>splitCurrent(1)); $('splitChord2')?.addEventListener('click',()=>splitCurrent(2)); $('splitChord4')?.addEventListener('click',()=>splitCurrent(4)); $('clearChord')?.addEventListener('click',clearChord); $('clearAllChords')?.addEventListener('click',()=>{ensureChords(); chords.forEach(b=>{b.slots=b.slots.map(()=> '');}); renderChordTrack();}); $('copyChord')?.addEventListener('click',copyChord); $('pasteChord')?.addEventListener('click',pasteChord); $('playChords')?.addEventListener('click',()=>playChordSequence(chordState.selectedBar,false)); $('playMelodyChords')?.addEventListener('click',()=>playChordSequence(chordState.selectedBar,true)); $('stopChords')?.addEventListener('click',stopChordPlayback); $('exportChordChart')?.addEventListener('click',exportChordChart); $('globalBars')?.addEventListener('input',()=>{ensureChords();renderChordTrack();}); }
+  window.addEventListener('DOMContentLoaded',boot); setTimeout(boot,200);
+  window.addEventListener('v60ApplyChord',e=>{ if(e.detail&&e.detail.name) setChord(e.detail.name); }); window.playChordSequence=playChordSequence;
+})();
+</script>
+
+
+
+<style id="v60-chord-editor-style">
+  .chord-mini-field{display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(162,191,217,.16);border-radius:14px;padding:6px 9px;background:rgba(20,42,68,.74);font-size:13px;color:#dcecff;font-weight:800}
+  .chord-mini-field select{background:#08172a;color:#f3fbff;border:1px solid rgba(162,191,217,.2);border-radius:10px;padding:6px 8px;font-weight:900}
+  .chord-assistant-v60{margin-top:12px;padding:12px;border-radius:18px;background:linear-gradient(180deg,#24282d,#1b2025);border:1px solid rgba(255,255,255,.12);box-shadow:inset 0 1px 0 rgba(255,255,255,.04)}
+  .chord-assistant-title{font-weight:900;color:#f2f6fb;margin-bottom:10px}.chord-assistant-columns{display:grid;grid-template-columns:repeat(4,minmax(120px,1fr));gap:10px}.chord-assistant-columns b{display:block;color:#dce6ef;font-size:13px;margin:0 0 6px;border-bottom:1px solid #6b6f75}.chord-editor-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}.chord-editor-grid button{min-height:30px;padding:4px 6px;border-radius:6px!important;background:#484d52!important;color:#fff!important;border:1px solid rgba(255,255,255,.1)!important}.chord-editor-grid button.active{background:#65c8d7!important;color:#06111d!important;font-weight:1000}.chord-editor-preview{display:flex;align-items:center;gap:10px;margin-top:10px}.chord-editor-preview span{display:inline-flex;align-items:center;justify-content:center;min-width:90px;min-height:40px;border-radius:10px;background:#111820;color:#fff6c9;font-size:24px;font-weight:1000;border:1px solid rgba(255,255,255,.12)}.chord-mini-keyboard{display:flex;align-items:flex-end;margin-top:10px;height:38px;background:#aeb3c1;border-radius:4px;overflow:hidden}.chord-mini-keyboard span{height:38px;width:28px;background:#e5e8f0;border-right:1px solid #828895}.chord-mini-keyboard i{height:24px;width:14px;background:#121212;margin-left:-7px;margin-right:-7px;z-index:2}.chord-slot{touch-action:manipulation}.chord-slot:after{content:'双击删除';display:block;font-size:10px;color:rgba(255,255,255,.42);margin-top:3px}.chord-slot.empty:after{content:'点击填入'}
+  @media(max-width:900px){.chord-assistant-columns{grid-template-columns:repeat(2,minmax(120px,1fr));}}
+</style>
+
+
+<script id="v60-chord-editor-enhance">
+(function(){
+  const $=id=>document.getElementById(id);
+  const roots=['C','C#','D','Eb','E','F','F#','G','G#','A','Bb','B'];
+  const types=[['','maj'],['m','min'],['dim','dim'],['sus4','sus4'],['sus2','sus2'],['aug','aug']];
+  const exts=['','7','maj7','b9','9','#9','11','#11','13','6'];
+  const bass=['','C','C#','D','Eb','E','F','F#','G','G#','A','Bb','B'];
+  const st={root:'C', type:'', ext:'', bass:''};
+  function renderGrid(id, arr, key, labeler){
+    const box=$(id); if(!box) return; box.innerHTML='';
+    arr.forEach(item=>{ const val=Array.isArray(item)?item[0]:item; const lab=Array.isArray(item)?item[1]:(labeler?labeler(item):item||'无'); const b=document.createElement('button'); b.textContent=lab||'无'; b.className=st[key]===val?'active':''; b.onclick=()=>{st[key]=val; renderEditor();}; box.appendChild(b); });
+  }
+  function buildName(){ return st.root + (st.type||'') + (st.ext||'') + (st.bass?('/'+st.bass):''); }
+  function renderEditor(){
+    renderGrid('chordRootGrid', roots, 'root'); renderGrid('chordTypeGrid', types, 'type'); renderGrid('chordExtGrid', exts, 'ext', v=>v||'无'); renderGrid('chordBassGrid', bass, 'bass', v=>v||'无');
+    const p=$('chordEditPreview'); if(p) p.textContent=buildName();
+  }
+  function apply(){
+    const name=buildName();
+    const btn=[...document.querySelectorAll('#chordButtons .chord-btn')].find(b=>b.textContent===name);
+    if(btn){ btn.click(); return; }
+    // 直接调用页面已有的按钮流程：临时创建按钮并点击可避免访问闭包失败
+    const box=$('chordButtons');
+    if(box){ const b=document.createElement('button'); b.className='chord-btn'; b.textContent=name; box.appendChild(b); b.click = function(){
+        const activeSlot=document.querySelector('.chord-slot.selected'); if(activeSlot){ activeSlot.textContent=name; }
+      } }
+    // 访问原闭包不可用时，使用用户可见提示
+    try{ window.dispatchEvent(new CustomEvent('v60ApplyChord',{detail:{name}})); }catch(e){}
+    // 兜底：把当前选中的 slot 文本改为和弦名，仅视觉也可用；原保存由原和弦按钮完成。
+    const slot=document.querySelector('.chord-slot.selected'); if(slot){ slot.textContent=name; slot.classList.remove('empty'); }
+  }
+  function preview(){ try{ const btn=[...document.querySelectorAll('#chordButtons .chord-btn')].find(b=>b.textContent===buildName()); if(btn) btn.dispatchEvent(new PointerEvent('pointerdown')); }catch(e){} }
+  function boot(){ renderEditor(); $('applyEditedChord')?.addEventListener('click', apply); $('previewEditedChord')?.addEventListener('click', preview); }
+  document.addEventListener('DOMContentLoaded', boot); setTimeout(boot,500);
+})();
+</script>
+
+
+
+<style id="v61-chord-cleanup-style">
+  /* V6.1：精简和弦编配，只保留和弦编辑器与轨道，取消底部重复和弦按钮与无实际用途的键盘图示 */
+  #chordKey, label.chord-mini-field:has(#chordKey),
+  #chordTabs, #chordButtons, .chord-panel-tabs, .chord-button-grid, .chord-mini-keyboard {
+    display:none!important;
+  }
+  .chord-assistant-v60{margin-top:14px!important;}
+  .chord-topbar .chord-actions{align-items:center;}
+  #globalBars{min-width:86px;}
+  .chord-actions .btn.is-playing{background:linear-gradient(135deg,#d75d74,#e9846b)!important;color:#fff!important;}
+</style>
+<script id="v61-chord-pause-and-300bars-fix">
+(function(){
+  const $ = id => document.getElementById(id);
+  const MAX_BARS = 300;
+
+  function patchBars(){
+    const input = $('globalBars');
+    if(input){ input.max = String(MAX_BARS); if(Number(input.value)>MAX_BARS) input.value=String(MAX_BARS); }
+    try{
+      window.getGlobalBars = function(){
+        const el=$('globalBars');
+        let v = Math.max(1, Math.min(MAX_BARS, Number(el && el.value || 35)));
+        if(el) el.value = String(v);
+        try{ if(typeof state!=='undefined') state.bars = v; }catch(e){}
+        return v;
+      };
+      window.totalUnits = totalUnits = function(){
+        const sig = (typeof parseSig==='function') ? parseSig() : {unitsPerBar:16};
+        const unitsPerBar = sig.unitsPerBar || 16;
+        const bars = window.getGlobalBars ? window.getGlobalBars() : 35;
+        let rMax=0, mMax=0;
+        try{ if(typeof rhythmEvents!=='undefined' && rhythmEvents.length) rMax = Math.max(...rhythmEvents.map(e=>(Number(e.cell)||0)+(Number(e.units)||1)),0); }catch(e){}
+        try{ if(typeof melodyNotes!=='undefined' && melodyNotes.length) mMax = Math.max(...melodyNotes.map(n=>(Number(n.start)||0)+(Number(n.units)||1)),0); }catch(e){}
+        let start=0; try{ start = Number(state.playStartCell)||0; }catch(e){}
+        return Math.max(unitsPerBar*bars, rMax+unitsPerBar, mMax+unitsPerBar, start+unitsPerBar*2);
+      };
+    }catch(e){ console.warn('V6.1 bars patch failed', e); }
+  }
+
+  // 删除调号选择与重复的快捷和弦按钮区、键盘图示
+  function cleanupChordUI(){
+    const key=$('chordKey'); if(key){ const lab=key.closest('label'); if(lab) lab.remove(); }
+    ['chordTabs','chordButtons'].forEach(id=>{ const el=$(id); if(el) el.remove(); });
+    document.querySelectorAll('.chord-mini-keyboard').forEach(el=>el.remove());
+  }
+
+  const rootMap = {C:0,'C#':1,Db:1,D:2,'D#':3,Eb:3,E:4,F:5,'F#':6,Gb:6,G:7,'G#':8,Ab:8,A:9,'A#':10,Bb:10,B:11};
+  function chordNotesV61(name){
+    if(!name || name==='+' || name==='—') return [];
+    const parts=String(name).split('/');
+    const main=parts[0];
+    const m=main.match(/^([A-G](?:#|b)?)(.*)$/);
+    if(!m) return [];
+    const root=rootMap[m[1]]??0;
+    const q=m[2]||'';
+    let ints=[0,4,7];
+    if(/^m(?!aj)/.test(q)) ints=[0,3,7];
+    if(q.includes('dim')) ints=[0,3,6];
+    if(q.includes('aug')) ints=[0,4,8];
+    if(q.includes('sus2')) ints=[0,2,7];
+    if(q.includes('sus4')) ints=[0,5,7];
+    if(q.includes('maj7') || q.includes('j7')) ints.push(11);
+    else if(q.includes('7')) ints.push(10);
+    if(q.includes('add9') || q.includes('9')) ints.push(14);
+    if(q.includes('11')) ints.push(17);
+    if(q.includes('13')) ints.push(21);
+    let notes=ints.map(i=>60+root+i);
+    if(parts[1] && rootMap[parts[1]]!=null){
+      const bass=48+rootMap[parts[1]];
+      notes=[bass,...notes];
+    }
+    return notes;
+  }
+
+  let chordPlay = {playing:false, timers:[], mode:null, startCell:0};
+  function clearChordTimers(){
+    chordPlay.timers.forEach(t=>clearTimeout(t));
+    chordPlay.timers=[];
+  }
+  function setChordButtons(playing, mode){
+    const pc=$('playChords'), pmc=$('playMelodyChords');
+    if(pc){ pc.classList.toggle('is-playing', playing && mode==='chords'); pc.textContent=(playing && mode==='chords')?'Ⅱ 暂停':'▶ 播放和弦'; }
+    if(pmc){ pmc.classList.toggle('is-playing', playing && mode==='both'); pmc.textContent=(playing && mode==='both')?'Ⅱ 暂停':'▶ 旋律+和弦'; }
+  }
+  function stopChordPlaybackV61(){
+    clearChordTimers(); chordPlay.playing=false; chordPlay.mode=null;
+    const ph=$('chordPlayhead'); if(ph) ph.style.display='none';
+    setChordButtons(false,null);
+    try{ if(typeof state!=='undefined' && state.melodyPlaying && typeof playMelody==='function') playMelody(Number(state.playStartCell)||0); }catch(e){}
+  }
+  function getSlotData(){
+    const data=[];
+    document.querySelectorAll('#chordTrack .chord-bar').forEach((barEl,bi)=>{
+      const slots=[...barEl.querySelectorAll('.chord-slot')];
+      const split=Math.max(1, slots.length || 1);
+      slots.forEach((s,si)=>{
+        const name=(s.textContent||'').trim();
+        if(name && name!=='+' && !s.classList.contains('empty')) data.push({bar:bi, slot:si, split, name});
+      });
+    });
+    return data;
+  }
+  function moveChordPlayheadFromCell(cell){
+    const ph=$('chordPlayhead'); if(!ph) return;
+    ph.style.display='block';
+    ph.style.left=(cell*118/((typeof parseSig==='function'?parseSig().unitsPerBar:16)||16))+'px';
+  }
+  function playChordSequenceV61(withMelody=false){
+    if(chordPlay.playing){ stopChordPlaybackV61(); return; }
+    const sig=(typeof parseSig==='function')?parseSig():{unitsPerBar:16};
+    const unitsPerBar=sig.unitsPerBar||16;
+    const unitSec=(typeof secPerUnit==='function')?secPerUnit():0.125;
+    let startCell=0; try{ startCell=Number(state.playStartCell)||0; }catch(e){}
+    const events=getSlotData().map(ev=>({
+      ...ev,
+      cell: ev.bar*unitsPerBar + ev.slot*(unitsPerBar/ev.split),
+      units: unitsPerBar/ev.split
+    })).filter(ev=>ev.cell+ev.units>startCell);
+    if(!events.length){ try{toast('请先在和弦轨中填入和弦。')}catch(e){} return; }
+    chordPlay.playing=true; chordPlay.mode=withMelody?'both':'chords'; chordPlay.startCell=startCell; setChordButtons(true,chordPlay.mode);
+    const inst=($('chordInstrument')&&$('chordInstrument').value)||'electricPiano';
+    const t0=performance.now();
+    const endCell=Math.max(...events.map(e=>e.cell+e.units), startCell+unitsPerBar);
+    events.forEach(ev=>{
+      const delay=Math.max(0,(ev.cell-startCell)*unitSec*1000);
+      const tid=setTimeout(()=>{
+        if(!chordPlay.playing) return;
+        const a=(typeof ctx==='function')?ctx():null;
+        const when=(a?a.currentTime:0)+0.01;
+        chordNotesV61(ev.name).forEach(m=>{ try{ playTone(m, when, Math.max(.12, ev.units*unitSec*.9), inst); }catch(e){} });
+      }, delay);
+      chordPlay.timers.push(tid);
+    });
+    if(withMelody){ try{ if(typeof playMelody==='function') playMelody(startCell); }catch(e){} }
+    const phTimer=setInterval(()=>{
+      if(!chordPlay.playing){ clearInterval(phTimer); return; }
+      const elapsed=(performance.now()-t0)/1000;
+      const cell=startCell+elapsed/unitSec;
+      moveChordPlayheadFromCell(cell);
+      if(cell>=endCell){ stopChordPlaybackV61(); clearInterval(phTimer); }
+    },33);
+    chordPlay.timers.push(phTimer);
+  }
+
+  function rebindChordButtons(){
+    const pc=$('playChords'), pmc=$('playMelodyChords'), sc=$('stopChords');
+    if(pc){ const n=pc.cloneNode(true); pc.parentNode.replaceChild(n,pc); n.addEventListener('click',()=>playChordSequenceV61(false)); }
+    if(pmc){ const n=pmc.cloneNode(true); pmc.parentNode.replaceChild(n,pmc); n.addEventListener('click',()=>playChordSequenceV61(true)); }
+    if(sc){ const n=sc.cloneNode(true); sc.parentNode.replaceChild(n,sc); n.addEventListener('click',stopChordPlaybackV61); }
+  }
+
+  function bootV61(){
+    patchBars(); cleanupChordUI(); rebindChordButtons();
+    try{ if(typeof renderRhythm==='function') renderRhythm(true); }catch(e){}
+    try{ if(typeof renderPianoRoll==='function') renderPianoRoll(); }catch(e){}
+  }
+  window.stopChordPlaybackV61=stopChordPlaybackV61;
+  document.addEventListener('DOMContentLoaded',()=>setTimeout(bootV61,250));
+  window.addEventListener('load',()=>{setTimeout(bootV61,300);setTimeout(bootV61,900);});
+  setTimeout(bootV61,600);
+})();
+</script>
+
+
+
+<script id="v63-chord-preview-fix-and-manual-update">
+(function(){
+  const $ = id => document.getElementById(id);
+  const rootMap = {C:0,'C#':1,Db:1,D:2,'D#':3,Eb:3,E:4,F:5,'F#':6,Gb:6,G:7,'G#':8,Ab:8,A:9,'A#':10,Bb:10,B:11};
+  function chordName(){
+    const el = $('chordEditPreview');
+    return (el && el.textContent ? el.textContent.trim() : 'C') || 'C';
+  }
+  function chordNotes(name){
+    if(!name || name==='+' || name==='—') return [];
+    const parts = String(name).split('/');
+    const main = parts[0];
+    const m = main.match(/^([A-G](?:#|b)?)(.*)$/);
+    if(!m) return [60,64,67];
+    const root = rootMap[m[1]] ?? 0;
+    const q = m[2] || '';
+    let ints = [0,4,7];
+    if(/^m(?!aj)/.test(q)) ints=[0,3,7];
+    if(q.includes('dim')) ints=[0,3,6];
+    if(q.includes('aug')) ints=[0,4,8];
+    if(q.includes('sus2')) ints=[0,2,7];
+    if(q.includes('sus4')) ints=[0,5,7];
+    if(q.includes('maj7') || q.includes('j7')) ints.push(11);
+    else if(q.includes('7')) ints.push(10);
+    if(q.includes('add9') || q.includes('9')) ints.push(14);
+    if(q.includes('11')) ints.push(17);
+    if(q.includes('13')) ints.push(21);
+    let notes = ints.map(i => 60 + root + i);
+    if(parts[1] && rootMap[parts[1]] != null) notes = [48 + rootMap[parts[1]], ...notes];
+    return [...new Set(notes)];
+  }
+  function previewCurrentChord(){
+    try{
+      const name = chordName();
+      const inst = ($('chordInstrument') && $('chordInstrument').value) || 'electricPiano';
+      const a = (typeof ctx === 'function') ? ctx() : null;
+      if(a && a.state === 'suspended') a.resume();
+      const start = (a ? a.currentTime : 0) + 0.03;
+      const notes = chordNotes(name);
+      notes.forEach((m, i) => {
+        try { playTone(m, start + i * 0.006, 0.9, inst); } catch(e) {}
+      });
+      try { if(typeof toast === 'function') toast('试听和弦：' + name); } catch(e) {}
+    }catch(err){ console.warn('V6.3 chord preview failed', err); }
+  }
+  function bindPreview(){
+    const old = $('previewEditedChord');
+    if(!old || old.dataset.v63Bound === '1') return;
+    const btn = old.cloneNode(true);
+    btn.dataset.v63Bound = '1';
+    btn.textContent = '试听';
+    old.parentNode.replaceChild(btn, old);
+    btn.addEventListener('click', previewCurrentChord);
+    btn.addEventListener('pointerdown', ev => ev.stopPropagation());
+  }
+  document.addEventListener('DOMContentLoaded', () => setTimeout(bindPreview, 80));
+  window.addEventListener('load', () => { setTimeout(bindPreview, 150); setTimeout(bindPreview, 600); });
+  setTimeout(bindPreview, 500);
+})();
 </script>
 
 </body>
